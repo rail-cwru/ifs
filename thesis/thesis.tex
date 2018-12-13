@@ -1,0 +1,169 @@
+\documentclass[]{cwru}
+\usepackage[acronym,shortcuts,nonumberlist]{glossaries}
+\usepackage[toc,title]{appendix}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage[rightcaption]{sidecap} % Change if double-sided layout
+\sidecaptionvpos{figure}{c}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{rotating}
+\usepackage{array}
+\usepackage{amsopn}
+\usepackage{amssymb}
+%\usepackage{hyperref}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+%\usepackage{natbib}
+\usepackage[square,sort,comma,numbers]{natbib}
+\usepackage{complexity}
+\usepackage{hyperref}
+\usepackage[all]{hypcap}
+\usepackage{epigraph}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+%\usepackage{multipleinstance}
+\usepackage{verbatim}
+\usepackage{chronosys}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\atantwo}{atan2}
+\MakeRobust{\Call}
+\allowdisplaybreaks
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usetkzobj{all}
+\usetikzlibrary{positioning,shapes.geometric,arrows,fit}
+%\usetikzlibrary{bayesnet}
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text width=3cm, text badly centered, draw=black]
+\tikzstyle{decision} = [diamond, aspect=2, minimum width=3cm, minimum height=1cm, text width=3cm, text badly centered, draw=black, inner sep=0pt]
+\tikzstyle{sdecision} = [diamond, aspect=1.5, minimum width=3cm, minimum height=1cm, text width=3.5cm, text badly centered, draw=black, inner sep=0pt]
+\tikzstyle{flowarrow} = [thick,->,>=stealth]
+\tikzstyle{flowarrow} = [thick,->,>=stealth]
+
+\tikzstyle{model} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text width=6cm, text badly centered, draw=black]
+\tikzstyle{contribution} = [rectangle, minimum width=3cm, minimum height=1cm, text width=3cm, text badly centered, draw=black]
+
+\definecolor{positivecolor}{RGB}{0,0,139}
+\definecolor{negativecolor}{RGB}{139,0,0}
+\definecolor{lightgray}{RGB}{215,215,215}
+
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\setlength\epigraphwidth{10cm}
+\setlength\epigraphrule{0pt}
+
+\setlength\LTcapwidth{\textwidth}
+
+\definecolor{highlight}{rgb}{0.8,0.8,0.8}
+\newcolumntype{g}{>{\columncolor{highlight}}c}
+\newlength{\oldtabcolsep}
+\newlength{\tabcaptionsep}
+\setlength{\tabcaptionsep}{10pt}
+
+\hypersetup{pdfborder=0 0 0,pdfview=FitH}
+\fancyhead[LO,RE]{}% Remove section names from header
+
+\renewcommand*{\acronymname}{List of Acronyms}
+\renewcommand{\chapterautorefname}{Chapter}
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Section}
+\newcommand{\Appendixautorefname}{Appendix}
+% begin appendix autoref patch [\autoref subsections in appendix](http://tex.stackexchange.com/questions/149807/autoref-subsections-in-appendix)
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\hyper@makecurrent}{%
+    \ifx\Hy@param\Hy@chapterstring
+        \let\Hy@param\Hy@chapapp
+    \fi
+}{%
+    \iftoggle{inappendix}{%true-branch
+        % list the names of all sectioning counters here
+        \@checkappendixparam{chapter}%
+        \@checkappendixparam{section}%
+        \@checkappendixparam{subsection}%
+        \@checkappendixparam{subsubsection}%
+        \@checkappendixparam{paragraph}%
+        \@checkappendixparam{subparagraph}%
+    }{}%
+}{}{\errmessage{failed to patch}}
+
+\newcommand*{\@checkappendixparam}[1]{%
+    \def\@checkappendixparamtmp{#1}%
+    \ifx\Hy@param\@checkappendixparamtmp
+        \let\Hy@param\Hy@appendixstring
+    \fi
+}
+\makeatletter
+
+\newtoggle{inappendix}
+\togglefalse{inappendix}
+% end appendix autoref patch
+\newcommand{\thesisstatement}[1]{\emph{#1}}
+\newcommand{\mypar}[2]{\textbf{#1 (#2).}}
+\DeclareMathOperator{\sign}{sign}
+%% =================
+%% Title Page Setup
+%% =================
+
+\makeatletter
+
+\title{Interactive Feature Selection}
+\author{Helen Zhao}
+\date{}
+\degree{Master of Science}
+\doctype{dissertation}
+\department{Electrical Engineering and Computer Science}
+\defensedate{}
+
+\begin{document}
+
+\advisor{Dr.\ Soumya Ray}
+\committee{}
+\committee{}
+\committee{}
+
+
+\maketitle
+\makeapprovalsheet
+
+\frontmatter
+\tableofcontents
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+\begin{acknowledgments}
+
+\end{acknowledgments}
+
+\begin{abstract}
+
+\end{abstract}
+
+\mainmatter
+
+\input{thesis/introduction.tex}
+\cleardoublepage
+\input{thesis/background.tex}
+\cleardoublepage
+\end{document}
+
+\backmatter
+\cleardoublepage
+\phantomsection-
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{IEEEtran} 
+\bibliography{thesis/thesis.bib}
+
+\end{document}
