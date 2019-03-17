@@ -1,0 +1,851 @@
+\chapter{Evaluation}
+%importance of evaluation
+Evaluation is important to assess the ability and the design of visuals in achieving their purpose. We conducted a user study to evaluate the system and its effectiveness at facilitating collaborative feature selection. In this chapter, we outline the purpose and focus of the evaluation. We describe the design and procedure of the evaluation study. The evaluation study consist of a series of tasks. Later in this chapter, we describe each tasks, explain the step of the workflow it is evaluating, and explain how it helps us answer our research questions.
+
+\section{ Objectives of the Evaluation }
+The three main focus of the evaluation aims to understand the system's effectiveness at facilitating collaborative feature selection, the interpretability of the visualizations, and the system's ability to facilitate exploration of feature space. Qualitative and quantitative evaluation methods are utilized to design task that answer specific research questions.
+
+\section{Research Questions}
+Specific research questions extended from the main focus of the evaluation. The research questions for the study are organized into three categories - effectiveness, interpretability, and exploration of feature space. The research questions are listed below.
+
+Effectiveness
+\begin{itemize}
+\item{Is the design of the application intuitive to the user?}
+\item{Does the user build a classifier with high performance?}
+\item{Does the built classifier reflect causal aspects accurately?}
+\item{Does the built classifier reflect feature importance accurately?}
+\end{itemize}
+
+Interpretability
+\begin{itemize}
+\item{Are the visuals produced by the application easy to read?}
+\item{Are the visuals correctly analyzed by the user?}
+\item{Can the user explain/interpret the certain feature set used to build the classifier? }
+\item{Can the user explain/interpret why a certain feature set may create a higher performing classifier than another feature set?}
+\item{Does each piece contribute to the overall interpretability? I.e. if the causal graph is removed, is it more difficult to explain the classifier’s performance?}
+\end{itemize}
+
+Exploration of Feature Space
+\begin{itemize}
+\item{Does the design of the application aid in feature exploration?}
+\item{How quickly can a user select the most relevant features?}
+\item{How quickly can a user filter out the most irrelevant features?}
+\item{How quickly can the user choose between features that directly influence the label versus indirectly influence the label?}
+\end{itemize}
+
+\section{ Version B }
+For the evaluation study, we created a separate application that does not incorporate prior knowledge about feature importance or causal relationships. The original application will be referred to as version A and the participants using version A are apart of group A, while the limited application will be referred to as version B and those participants are apart of group B.
+
+The only two steps in version B are feature selection and performance analysis as shown in figures \ref{fig:LabelFSInterface} and \ref{fig:PerformanceAnalysisPage}. The purpose of creating and evaluation version B is to determine the effects of integrating prior knowledge have on participants' feature selections, the number of trials performed during feature selection, the total time for the feature selection process, and other feature selection behaviors.
+
+\section{ Participants }
+Participants are recruited from the undergraduate and graduate students at Case Western Reserve University. Participants first answer a questionnaire about their major and knowledge of machine learning and classification. Participants are divided equally into group A and group B. When assigning participants to a group, we match two participants with similar characteristic and divide them between the groups. The characteristics we will used to match participants are major, age, and experience in machine learning. Participants in group A and B are further specified based on whether they majored in computer science (CS) or not. The number of participants in and information about group A and B are presented in table \ref{ParticipantInfo}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants &  \multicolumn{1}{l}{Version A} &  \multicolumn{1}{l}{Version B} \\ \hline
+CS           & 10        & 10        \\
+Other       & 5         & 5         \\ \hline
+\textbf{Total}        & \textbf{15}        & \textbf{15}        \\ \hline
+\end{tabular}
+\caption{Participants are grouped by which version of the system they are evaluating and whether they major in CS or not and which system they are evaluating. The number of participants in each group is reported. }
+\label{ParticipantInfo}
+\end{table}
+
+\section{Design of the Evaluation}
+The system is designed for users with basic knowledge and understanding of machine learning and classification. In the introductory material, the participants are given brief explanations about classification and feature selection, example of an use case, and necessary terminologies - such as accuracy, target label, etc. They are trained through a series of short introductory videos that explain each part of feature selection work flow, the functionalities, and visualization of the interface. The tutorial features a weather classification problem, which is trying to classifying tomorrow's weather condition as either sunny, rainy, or foggy based on today's weather metrics. The participants can interact with the system using the demonstration dataset. After they are familiarized and confident with the system, they proceed to the user study.
+
+To evaluate the visualization, we provide the participants with a specific scenario. The premise for the study is that the participant is developing a classifier for predicting student's letter grades (A, B, C, or F) based on information about the student such as whether they work a part time job or participate in extracurricular. They are asked to complete a series of tasks guiding them to select features that will help them predict student grades. The tasks test each step of the feature selection process and evaluate the research questions. The tasks are presented one after the other and are to be completed consecutively. If the participant is unable to answer the question using the system or does not want to performance a task, they can proceed onto the next task without completing the current task.
+
+Group B participants do not complete the first few tasks relating to prior knowledge. Group A and B both complete the same tasks relating to feature selection, performance analysis, and overall effectiveness of the application.
+
+Some tasks require the participants to interact with the interface, such as "You think that today's humidity is important for predicting tomorrow's weather. Express this knowledge using the system". To understand if the participants interpret the visualizations correctly, some tasks require written responses from the user, such as "What are the Markov blanket features of the target variable".
+
+During the evaluation process a tracking mechanism traces the participant's actions such as interactions with the graph, edits to the graph, moving features, etc. Using this tracking mechanism, we can measure time spent on each task, user interactions performed to accomplish each task, and correctness of their answer. The events are tracked and logged by keen, an application for tracking and analyzing user interactions. Events are analyzed to extract quantitative results about the effectiveness and usability of the system.
+
+\section { Pilot Study Findings }
+We conducted a pilot study before the evaluation study. Three participants evaluate version A and three participants evaluate version B for the pilot study. Observations from the pilot study are used to evaluate whether the design of study and the data collected help answer our research questions. Moreover, minor changes are made to the application based on results from the pilot study. The changes are described.
+
+In one of the task, participants edit the causal graph to reflect cause and effect relationships that they think may exist in the dataset. Participants are told to remove or edit relationships that do not make sense to them and add edges to represent relationships they think exist. Participants reversed many edges. For example, edges from family income to father job, family income to mother job, family support to family income are reversed by all three participants. One participant just made five edge reverse, while another participant added ten new edges and four edge removals. The frequency of edge reversals demonstrated that when given an example of the causal network's structure, humans are able to orient edge based on their prior knowledge. Since many causal discovery algorithms consist of two parts - discovering the skeleton of the network and orienting the edges, human background knowledge can be utilized for the second part as demonstrated by the participants. Moreover, we recognized the need for an edge reversal edit to condense a reversal edit from two graph interactions to one graph interaction. An edge reversal edit option is added to the application and used for the evaluation study.
+
+Another change we made is creating an default feature selection that consist of the target's Markov blanket features. We observe that many of trials consisted of feature sets that contained many Markov blanket features. For example, participant 2 and 3's Markov blanket consistency scores did not go below 0.75 which supports that feature selections often consist of many Markov blanket features. We recognize that the Markov blanket feature set is a great benchmark for participants to compare their feature selections against. During the pilot study, Markov blanket features are placed in the selected set by default, but a classifier is not created. We amended the system such that a default classifier is created from the Markov blanket feature set and labeled as trial 0 at the feature selection and the performance analysis step. This will help facilitate the comparison of performance and feature selection metrics between a selected feature set and the Markov blanket feature set. Moreover, in the new design, participants can make quick amendments to Markov blanket feature set whenever they want by selecting trial 0 during the feature selection step and then proceeding with the amendments.
+
+Lastly, we added an additional graph to the performance analysis step. We added the ROC curve graph that is described in section \ref{PASection}. This decision was made because the ROC curve and the area under the ROC curve (AUROC) are commonly used metrics for performance analysis and a visual method for accessing performance. Participants can select which pair of classifiers' ROC curves to plot and then visually compare the area under the curves to compare performance of the two classifiers.
+
+Moreover, we made minor changes to the wording of the user study instructions to prevent confusions that were expressed by participants during the pilot study. After the analysis and changes were made, we continue with the evaluations study.
+
+\section{Efficiency and Effectiveness of Expressing Feature Importance Interface}
+Task 1 assesses the effectiveness of the interface at expressing feature importance and intuitiveness of the visualization and interactions. Participants are informed that whether a student takes extra classes may be important for predicting their grade and that whether a student is admitted to college may be important but not as important as whether they take extra classes. Participants are instructed to express the importance of these features as well as their own ideas about which features are important for predicting student grades. The placement and grouping of features are logged and compared against the information provided in the task. This task is only relevant for group A and the following results describe their interactions.
+
+Every participants successfully completed the task; the average time to complete the task is shown in table \ref{FeatureImportanceTaskTime}. Participants were able to create two additional concentric circles, moved the most important feature, extra classes, into the innermost circle, and moved the second to most important feature, college, into the second circle (the order of completed actions does not matter). Based on efficiency in task completion, the interactions seem intuitive to participant and the interface and interaction effectively translating feature importance visually. Participant 1's feedback about the visual was that it was "easy to use and made sense".
+
+Moreover, participants are instructed to express feature importance of the other features as they see fit, only a few participants changed importance ranking of features that were not specified in the task description. Additional information about additional expressed feature importance is reported in table \ref{ExpressedAdditionalImportance}. These participants spend more time at this step - most likely because they spend more time recalling what they know about the relation between a feature and student grade and ranking that feature against the others.
+
+Furthermore, fewer participants made additional changes to feature importance compared to the number of participants who made additional changes to the causal graph. This behavior may indicate that cause and effect relationship is a more relevant or familiar concept to participants than ranking feature importance. Participants may be have found it difficult to determine how important a feature is relative to the other features.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lc}
+\hline
+Participants    & Avg Time (min) \\ \hline
+CS     & 0               \\
+Others & 0              \\ \hline
+\textbf{All}    & \textbf{0}             \\ \hline
+\end{tabular}
+\caption{Average time to express feature importance for CS students, other students, and all students.}
+\label{FeatureImportanceTaskTime}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants            & Expressed Additional FI & Did Not Express Additional FI \\ \hline
+\# of Participants      & 10                      & 10                            \\
+Avg Time (min)          & 5                       & 5                             \\
+Avg \# of additional FI & 15                      & 15                            \\ \hline
+\end{tabular}
+\caption{Additional information about participants who expressed and did not express additional feature importance (FI).}
+\label{ExpressedAdditionalImportance}
+\end{table}
+
+\section{ Effectiveness and Efficiency of Expressing Causal Relationship}
+Task 2 is design to test the effectiveness of the interface and interactions at expressing causal relationship. Participants are asked to express that participating in extracurricular is a cause of having a part time job and having family support is a cause of participating extracurricular.
+
+In the evaluation study, all participants successfully accomplished task 2. Most participants are able to express that participating in extracurricular is a cause of having a part time job by reversing the edge from job to extracurricular, while just a few removed that edge from job to extracurricular and then adding edge from extracurricular to job. All participants are able expressed that having family support is a cause of participating in extracurricular by adding an edge from family support to extracurriculars. Participants are able to choose the appropriate edit and successfully make edits in a reasonable amount of time - the average time for completing the task is reported in table \ref{GraphEditTimes}. Participants correctly interpret causal relationships expressed in the graph which demonstrated that the graph is a valid and efficient representation of causal relationships. Moreover, participants correctly represented the relationships describe in the task which demonstrates the understanding and the usability of the editing functionalities.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lc}
+\hline
+Participants & Avg Time (min) \\ \hline
+CS           &        0        \\
+Others       &       0         \\ \hline
+\textbf{All} & \textbf{0}    \\ \hline
+\end{tabular}
+\caption{Average amount of time participants spent editing causal graph. }
+\label{GraphEditTimes}
+\end{table}
+
+In addition, participants are told to remove or edit relationships that do not make sense to them and add edges to represent relationships they think exist. Some participants made additional edits to the graph, the number of which are detailed in table \ref{GraphEdits}. Since the participants are college students, their edits to the graph reflected their background knowledge about the causes and effects of a student's grade. For example, three participants added an edge from extracurricular to study time - the intuition being that students participating in extracurricular have less time to study. Edge reversals are the most frequent graph edits, which demonstrates that human can play a supportive role in causal discovery. Many causal discovery algorithms consist of two parts - discovering the skeleton of the network and orienting the edges; human background knowledge be utilized for the second part as demonstrated by the participants. For example, the original causal graphs built by GES have an edge from family income to mother has job representing a student's family income as a cause of whether the student's mother has a job. Many participants disagree with the algorithm's choice in orientation and reverse the edge because they, unlike the algorithm, understand the meaning of the features. This task demonstrate that humans often have an idea about the relationship and interaction between the features. Moreover, background knowledge can be useful for building a causal graph that accurately represent the true causal relationships in the dataset and is a useful tool for helping the user determine predictive features.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lccc}
+\hline
+Participants & \# of edge removals & \# of edge additions & \# of edge reversal \\ \hline
+CS           & 0             & 0              & 5           \\
+Other      & 4             & 10             & 4             \\ \hline
+\textbf{All} & \textbf{2}    & \textbf{3}     & \textbf{4}    \\ \hline
+\end{tabular}
+\caption {Summary of graph edits made by each group of participants.}
+\label{graphedits}
+\end{table}
+
+\section {Interpretability of Causal Graph}
+Task 3 asks participants to identify the indirect causes and effects of grade. Task 3 is design to evaluate the interpretability and readability of the causal graph. An additional purpose of task 3 is to evaluate whether the interactions such as clicking to highlight feature nodes help users interpret the graph. P
+
+Participants are able to correctly interpret causal relationships and features that are weakly and strongly relevant to the target. Most participants are able to identify indirect causes and effects of student grades from the causal graph. All participants interacted with the graph to identify weakly and strongly relevant features. The number of participants that utilized each functionality is reported in table \ref{GraphInteractions}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lccc}
+\hline
+Participants & Highlight MB & Highlight Path to/from Grade & Highlight Edge \\ \hline
+CS           & 10           & 10                           &                \\
+Others       & 5            & 5                            &                \\ \hline
+\textbf{All} & \textbf{15}  & \textbf{15}                  &  \textbf{}        \\ \hline
+\end{tabular}
+\caption{The number of participants that utilized the interactions with the causal graph. }
+\label{GraphInteractions}
+\end{table}
+
+All the participants highlighted the Markov blanket of a feature; highlighting the Markov blanket of the selected feature is the default interaction which may also explain why it is the function that all participants used. In comparison, only about X \% of all participants highlighted connected paths to or from the target. Another reason that the highlight Markov blanket function may be utilized much more than highlight connected path to the target function is that the participants could identify connections between a feature and the target with out having to use the highlight path function since the causal graph, with only twelve nodes, is small. Moreover, participants can also identify whether a feature is weakly relevant to the target by highlighting its Markov blanket and seeing if a target Markov blanket feature is highlighted.
+
+Lastly, few participants highlighted edges and not many edge were highlights. Edge highlights may be less important in this example because the graph is small without a high density of edges. For larger graphs with many edits, edit highlights may be more useful to correctly identify adjacent features to the selected edge.
+
+\section { Interpretability of Feature Selection Interface }
+Task 4 is design to assess the interpretability of the feature selection interface. It is the first task that both group A and B participants complete. The participants are given various questions that can be answered by reading the feature selection graph \ref{}. This task evaluates whether participants are able to correctly interpret the feature selection graph.
+
+First, participants are ask to correlate a set of feature values, has scholarship and participates in extracurricular, to student grades. In the dataset, there are 43 A, 63 B, and 12 C students with that set of features. Most participants filtered for the set of feature values to highlight examples fitting that set of feature values. Some participants place the features next to each other and gauged how many lines of each color connected the specified feature values. Since there is only slightly more B students than A students fitting that description, it is visually difficult to distinguish whether more A or B examples correlated to that set of feature values. Answers included A students, B students, and both A and B students. The frequency of each answer is reported in table \ref{InterpretFS1}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lc}
+\hline
+Answers & Frequency \\ \hline
+A       & 10        \\
+B       & 5         \\
+A, B    & 15        \\ \hline
+\end{tabular}
+\caption{}
+\label{InterpretFS1}
+\end{table}
+
+Visualizations can be misleading. That's why evaluation is important for verifying that visualization correctly communicates information. Because examples are displayed as lines, participants have to rely on the density of the lines that intersect a feature axis to determine the amount of examples that have that feature value. A subset of the participants in both groups commented it was difficult to tell whether there are more A or B students fitting the description. Participants are able to acknowledge gaps in their visual analysis. Even though we can get an accurate count of A and B students by presenting the data in a table, visuals are more efficient at communicating information. Participants are able to reach their decision quickly; counting the number of example in a table for each question will take more time.
+
+Second, participants are also ask to identify features that distinguish or separate A from F students and those that distinguish B and C students.  We did not explicitly quantify a distinguishing feature. To distinguish label u from label v, for each feature, we calculate the ratio of the more frequent label to less frequent label for each feature value. If the ratio is 4 or greater for each of feature value (meaning there is 4 times more of the frequent label than the less frequent label for each feature value), then the feature distinguishes label u from label v. For A and F students, study time, extra classes, college, and scholarship have a ratio of 4 or more for every feature value. For B and C students, only scholarship, college, and study time have ratio of 4 or more. We calculated how many distinguishing features participants are able to identify.
+
+Participants did not identify all features that distinguish A from F and B from C students. The number of features identified by participants of each group are shown in table \ref{DistinguishingFeatures}. There may be many reasons why participants are not able to identify all distinguishing features. For example, some participants commented that the color associated with a label is visually stronger than that of another label. A subset of the participants utilize the filter for feature value functionality. Most participants utilize class label selection function to filter for label(s) of interest; they observe the density of colored lines to determine whether a feature distinguishes the two labels/colors. Although there are eleven features and it is feasible to individual assess each feature to determine if the feature separates two class labels, it is likely for participants to evaluate the entire graph and determine which features clearly separates the two colors. Moreover, for datasets with larger number of feature, we expect an user to be less likely to assess individual features and therefore the users are likely to not identify every distinguishing feature. We designed the system such that the user can build upon prior knowledge or previously established information. We hypothesize that the Markov blanket step and feature importance step will help users spot distinguishing features in the feature selection graph/visual.
+
+A participant commented that they had difficulties identifying patterns in feature selection graph because the placement of the feature affect the visual. The placement of the feature may obscure the correlation between a feature value and another feature that is placed further away. Participant attempted to figure out what pairs and groups of features distinguish A from F labeled examples by rearranging feature axes; however, they stated they can not exhaust all possible rearrangement of axes. Other participants also commented that it was easier to identify correlation between feature values when the feature axes are placed next to each other. The placement of the feature axes may be a contributing factor to why a feature was identified or not identified as separating two target labels. This is another example how visualizations can be misleading. Although visualization is a more efficient presentation of data, some information may be obscured. This is a ubiquitous challenge in data visualization. We have to sacrifice some clarity and certainty for the efficiency in visual data processing. We recognized that the uncertainty and ambiguity in the visual may increase with the increase in number of examples and features in the dataset.
+
+Even though version B does not build a causal graph, version B participants are asked which features they think may be causes or effects of student grades. We noticed that version B participants are likely to identify a distinguish feature when the feature is previously identified by the participant as being a cause or effect of target. Participants are interacting and viewing the feature selection graph with prior knowledge or information. Participants are relying on their intuitions about what features are important (causal features may be biased as important) to answer these questions. This behavior supports our design of incorporating prior knowledge into the feature selection process. The average number of features distinguishing two class labels that the groups of participants identified is presented in table \ref{DistinguishingFeatures}. There is no significant difference between the number of features group A and group B participants are able to identify. However, group B participants behavior support that causality may be a factor in identifying distinguishing features. Perhaps with a dataset with many more features, it would be more difficult for participants to rely solely on their intuitions about cause and effect relationship and therefore more difficult to complete this task.
+
+The average amount of time in minutes for participant to answer questions about patterns in the dataset is presented in table \ref{AvgTimeIdentifyPattern}. Participants are able to complete the task in an efficient manner by interpreting and interacting with the visualization. Identifying patterns or correlation between feature values would be more time consuming if the participants were presented with a table of the data or would require knowledge about data science which some of the participants did not have.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lc}
+\hline
+Participants & Avg Time (min) \\ \hline
+CS           & 10             \\
+Other        & 5              \\ \hline
+\textbf{All} & \textbf{15}    \\ \hline
+\end{tabular}
+\caption{The average amount of time for participants to complete the task of identifying patterns}
+\label{AvgTimeIdentifyPattern}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants & A and F & B and C \\ \hline
+CS (A)       & 10      &         \\
+Other (A)    & 5       &         \\
+\textbf{All (A)} & \textbf{}        &  \textbf{}       \\ \hline
+CS (B)       & 15      &         \\
+Other (B)    &         &         \\
+\textbf{All (A)} &   \textbf{} & \textbf{}        \\ \hline
+\end{tabular}
+\caption{The average number of features that were correctly identified as distinguishing A from F and B from C labels.}
+\label{DistinguishingFeatures}
+\end{table}
+
+
+\begin{table}[]
+\center
+\begin{tabular}{ll}
+Feature Name    & Code \\ \hline
+age             & A            \\
+college         & B            \\
+extraclasses    & C            \\
+extracurricular & D            \\
+familyincome    & E            \\
+familysupport   & F            \\
+fatherhasjob    & G            \\
+job             & H            \\
+motherhasjob    & I            \\
+scholarship     & J            \\
+studytime       & K
+\end{tabular}
+\caption{}
+\label{FeatureToCode}
+\end{table}
+
+\section { Feature Analysis Metrics }
+In task 5, the participants are tasked to create and analyze a set of features that is not the set of Markov blanket features. The participants are asked to identify whether Markov blanket features are covered and whether important features are in the feature selection. They are also asked how they arrived at their answers to assess if the visualizations are used as intended. Lastly, the participants are asked to compare the feature analysis metrics of the current feature selection against trial 0, which is the set of target Markov blanket features. The questions are assessing whether the visualizations help the participants determine the consistency of the current feature selection and connect the feature selection to previous expressed information. The purpose of the task is to evaluate the interpretability and effectiveness of the feature analysis view.
+
+In task 6, participants are tasked to create a classifier with the features selection from task 5. They are asked to compare the performance of this classifier to the classifier created using all the Markov blanket features of grade and whether they can explain the difference in performance if any. Task 6 analyzes whether the user can use the feature analysis metrics to explain the difference in performance between classifiers created with different feature sets.
+
+\subsection{ Reading Metric Graphs }
+All the participants are able to determined how many Markov blanket features are covered in the current feature selection by reading the Markov Blanket Consistency Chart. In addition, participants are also able to determine whether importance features are in the feature selection. A participant commented explained that they used the Feature Importance Consistency Pie Chart to look at whether "the green outer boxes corresponding to dark blue boxes", while others cited the rank loss score since higher loss means less consistency.
+
+Some participants noted that feature analysis allows them to refine their feature selection. Participant 2439 commented that when they "ended up not being very consistent with the causal graph nor with the feature importance selection" made them change their feature selection.
+
+\subsection { Comparing Metrics }
+Participants are able to describe the differences in feature analysis metrics between the current feature selection and trial 0, such as the MB score of trial 0 is greater than trial 1 and the rank loss of trial 0 is less than trial 0. However, most participants did not explain the difference.
+
+Participants connect or explain a classifier's performance using feature analysis metrics. Participant 891, who demonstrated a clear understanding of the meaning of the feature metric, related feature metric to the performance of the classifier. They stated that trial 9 had only half of the Markov blanket features hence MB score of 0.5 and may be a reason why trial 9’s feature selection was not as great as trial 0’s.
+Participants also use feature analysis metrics to help explain why a classifier may perform better than another classifier. For example, participant 9871 explained that trial 1 performed worst than trial 0 because in trial 1 "the selected feature didn't cover all of the contributing factors to grades (hence the low MB coverage score) and weren't the most important". Moreover, participant 2439 commented that trial 1 was "not very consistent with the causal graph nor the feature importance selection" and attributed those characteristics to the low performance of the classifier.
+
+\subsection { Metrics Guide Feature Selection }
+Some participants commented that they utilized the feature analysis graphs and those metrics influence a feature addition or removal.
+
+
+\subsection{ Analysis }
+The participants demonstrated a good understanding of feature analysis metrics. From the comments on comparing classifiers, participants understand that a feature selection with lower rank loss and higher MB score and MI score than another may be the reason for higher performance. However, not all participants demonstrated that they understand how rank loss score and MB score connects to the previously expressed prior knowledge.
+
+Some participants did not understand the concept of Markov blanket coverage. For example, participant 891 mentioned “sometimes removing Markov features from a feature selection did not remove the feature from being covered during the feature analysis”. These participants likely thought a feature in the Markov blanket Chart is covered if the feature is in the feature selection. The concept of coverage is explained in the introductory material but may still be foreign to the participants. The concept can be better explained in the future.
+
+
+\section{ Exploring Feature Space }
+Participants explore the feature space in task 7. Participants continue to build classifiers until they decided which feature set should be used to predict student grades. The questionnaire asked which features should be used to predict student grades and whether they can explain why the set of features is predictive of student grades. The participants are again asked to compare the performance and feature analysis metrics of two classifiers created with different sets of features. Feature selections, metrics about the feature sets, and classifiers performance are logged to analyze the participant's progress. Task 7 evaluates the ability of the application to allow the user to explore the space of feature sets. Moreover, the task evaluates the interpretability and usefulness of the feature metrics, the usability of the comparison functionality, and the usability of the feature selection graph.
+
+In this section, we describe how participants in group A and B explore the feature space and compare and contrast their behaviors.
+
+Results from both groups demonstrate the efficiency and usability of the interface and interactions. Participants did not have trouble dragging the feature axes to select features. All participant were able to attempt several trials in less than 30 minutes before deciding on the feature set to predict the target. The amount of time the participants in group A and B spent exploring the feature space is presented in table \ref{versionAvsversionB}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+                 & CS & Others \\ \hline
+avg \# of trials &    &        \\
+total time       &    &        \\
+time per trial   &    &        \\ \hline
+avg \# of trials &    &        \\
+total time       &    &        \\
+time per trial   &    &        \\ \hline
+\end{tabular}
+\caption{}
+\label{versionAvsversionB}
+\end{table}
+
+\subsection { Group A Observations}
+Group A participants start with the feature set of target Markov Blanket features in the feature selection. Participants then make minor changes to the Markov blanket feature set. They make elementary changes to the Markov blanket feature set such as adding or removing a feature from the default feature set. Feature additions are more common than feature removals. Initially, participants do not deviate far from the Markov blanket feature set with some exceptions.
+
+Some participants commented that they analyzed the feature analysis before creating the classifier. After a feature is added or removed, they review the feature metrics which influences whether the change is reversed or not.
+
+The final feature set contains may Markov blanket features and importance features. Expressing prior information about feature importance and causal relationships help find predictive features. Report how many people have study time and college in their final feature selection.
+
+\subsection { Version B }
+Version B participants are presented with an empty set of selected features when first accessing the application. They are shown an empty set because prior information was not communicated to the system. Before they make feature selection, they are asked which features they think may be causes or effects of student grades.
+
+Participants relied on their intuition when selecting features and often selected features that they think are causal. When causal discovery is not integrated, participants have to rely on their instincts to figure out which features are direct or indirect causes or effects of the target and may be predictive of the target. However, participants identified different causal features and the initial feature selections varied greatly. By incorporating causality, we can help the user identify causal features that may be predictive.
+
+Moreover, by incorporating causality, participants can identify causal features that they many not have thought about. For example, while participants are able to identify direct causes and effects, they are less equip to identify indirect influences. GES can provide participants with a complete picture of causal relationships; the visual can help people identify indirect influences to the target that may help build a high performing classifier.
+
+On the other hand, some participants did not start with features that they identify as causal. They started by creating a classifier with a small set of features and added and removed features based on the accuracy of the resulting classifier. In one strategy, the participant focused on two features at a time. If the feature selection with one of the feature does better than the feature selection with the other, then only the one that improved the accuracy the most is kept in the feature selection. If their performance are similar, then the participant choose one of the two to kept in the feature selection.
+The feature selection functionalities help them uncover relevant features. They choose two feature - X and W . If the classifier with feature X perform as well as the classifier with feature W, then only one of the two features is kept in the next trial. If both features perform poorly, then both are removed. Participant recognized that including both scholarship and college in the final feature set is redundant. Removing one would not have made a significant different in accuracy. Participant made this connection in the 4th trial when he removed scholarship and kept college and there was less than 0.002 change in both training and testing accuracy. By showing causal graph, participant may be better equipped to identify redundant features rather than relying on solely guess and check.
+
+
+\subsubsection { Version A vs Version B }
+Participants using version A on average spend more time between trials. Participants using version A may be putting in more thought or reasoning about their selected feature set. Participants using version A spend more time between trials because they can evaluate metrics describing the consistency of the feature set to previous established information. On the other hand, participants using version B are more likely to use guesswork when selecting features. For example, some participants using version A complete only a few trials in a long stretch of time. On the other hand, participants using version B complete many trials in the a similar period of time.
+
+group A start with the MB features. group B most likely start with causal features.
+
+Version A participant feature selection are guided by feature metrics. Supported by more time spent per trial most likely because they review the feature analysis metrics before selecting features. Group A participants demonstrated that they understand the feature metrics and know how to compare feature metrics of different feature selections or trials. Participants have noted that when he saw that the feature selection had lower MB and MI score than trial 0, the participants changed the feature selection. Participants compare their feature selection to trial 0 and aim to get better MI score and/or lower rank loss score. Group A also perform less trials than group B. Group A is most likely ruling out certain feature sets because of feature metric scores. They are more likely to focus on a set of features because of the metrics.
+
+On the other hand, group B does not have a default classifier to compare their classifiers against and does not have metrics to guide their selection. They rely entirely on their intuition and on trial and error. That's why the initial feature sets are usually features they think are causal. Then they remove and add features based on whether the accuracy of the classifier improve.
+
+Trial and error is also a common technique in group A. The feature that they add or remove is often by random. However some participants do not create a classifier with that feature set if the metrics are low. Some participant towards later trials rely more on trial and error.
+Another trial and error technique observed in both groups is to remove and add features to the highest performing classifier. In both groups, the accuracy does not go up continuous. Participants select to display high performing classifiers and then incremental change them.
+
+Both group better at filtering out irrelevant features than filtering out redundant features. They can filter out irrelevant features by adding the feature, seeing performance of resulting classifier, and the remove feature if the performance did not improve significantly. However, the significant threshold differ individually - some participants kept the feature if it improve performance even slightly.
+
+Easier to evaluate the effect of a feature for a dataset with not that many features. Easier to find redundant features. Will be more difficult to identify redundant features and to move features when the number of features increase.
+
+After the initial feature sets are selected based on their perceived causality, participants filter for features that improve performance. They added new features one or two at a time; if the new features improved the performance, then the features were kept in the feature selection. Using th Towards the latter trials they were randomly adding or removing features from high performing feature sets to try to achieve better performance. For example, in trial 9, participant 2 used 6 features to create a model with 0.888 accuracy. Then in trial 10, they added an additional feature that increased the MB consistency score but only increased the mutual information score by 9 percent and did not increase model performance. As a result, participant removed the feature added in trial 10. This demonstrates that the scores can help explain the difference in performance of models - the additional feature did not provide information about the target as evident by the small change in mutual information score. This also demonstrated that after finding a set with high performance, participants modified the feature set to verify that they had the highest performing classifier. The functionalities of the interface enabled users to efficiently make modifications to previously used feature sets. The users were able visualize previous features sets and make feature additions and removals to them. Using this method, the participants were able to distinguish and remove irrelevant features.
+
+
+
+\section { Effectiveness of Feature Selection }
+The irrelevant features in the dataset are motherhasjob, fatherhasjob, age. The causal graph should reveal that these features are relevant. Age does not have an edge to or from any of the features which indicates that it is not related to any of the features.nMother has job and father has job are features that do not have a directed path to or from the target variable.
+
+Building the causal graph and expressing feature importance can help reveal predictive features to the participants. For example, study time and college are predictive features and are indicted as more important than the others during the feature importance step. Furthermore, in the original graph build by GES, the target's Markov blanket contains many predictive features. For example, scholarship and study time are parents of the target and are predictive features. Some participants (give a number) reversed the edge between the feature scholarship and the feature grade to show that a student grade is one of the causes of whether a student receives scholarship. Either way, scholarship and study time are likely to be in the target Markov blanket. In addition, in original graph, family support is a child of grade - meaning that whether the student receives family support is effected by the student’s grade. Extra classes is a spouse of the target - a student’s grade and whether the student takes extra classes are effecting whether the student has a part time job.
+
+It is noted that the original graph output by GES can be changed by ranking other features a most important during the expressing feature importance step. From the few participants who ranked other features as most important, the feature they indicated as most important are already in the Markov blanket of target even if they did not make that indication. Moreover, a participant can change the relationships between the target and a feature in the causal graph which can result in a change in the target's Markov blanket. However, participants did not remove edges to or from the target and more likely to reverse edges which more likely adds features to the target's Markov blanket. Therefore, the predictive features are likely to be in target's Markov blanket when the participant proceeds to the feature selection step. The data also shows that predictive features are in the Markov blanket.
+
+The feature selection step also helps discover predictive features. For example, scholarship is predictive and separates both A from F students and B from C students. In addition, study time separates B from C students and is predictive. However, it is noted that not all the participants were able to identify scholarship and/or study time as a distinguishing feature in the previous step.
+
+Relevant feature sets and their testing accuracy are reported in table \ref{relevantFS}.
+
+As shown in table \ref{RevelantFSBasedOnCausal} and \ref{RelevantFSBasedOnImportance}, group A participants more frequently include relevant features in their final feature set. Group A participants also exclude irrelevant features.
+
+Group A participants are likely to include Markov blanket features in the final feature set.
+
+\begin{table}[]
+\centering
+\begin{tabular}{ll}
+\hline
+Feature Sets                                               & Accuracy \\ \hline
+extra classes, family support, scholarship, study time (4) & 0.886    \\
+extra classes, college, family support, study time (4)     & 0.876    \\
+                                                           &
+\end{tabular}
+\caption{My caption}
+\label{relevantFS}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lccc}
+\hline
+Participants & \multicolumn{1}{l}{age} & \multicolumn{1}{l}{mother has job} & \multicolumn{1}{l}{father has job} \\ \hline
+group A      & 10                      &                                    &                                    \\
+group B      & 5                       &                                    &
+\end{tabular}
+\caption{The number of participants in each group that included the irrelevant features.}
+\label{IrrelevantFeatures}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants & \multicolumn{1}{l}{study time} & \multicolumn{1}{l}{college} \\ \hline
+group A      & 10                             &                             \\
+group B      & 5                              &
+\end{tabular}
+\caption{My caption}
+\label{RelevantFSBasedOnImportance}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lccc}
+\hline
+Participants & \multicolumn{1}{l}{scholarship} & \multicolumn{1}{l}{extra classes} & \multicolumn{1}{l}{family support} \\ \hline
+group A      & 10                              & 0                                 & 0                                  \\
+group B      & 5                               & 0                                 & 0
+\end{tabular}
+\caption{My caption}
+\label{RevelantFSBasedOnCausal}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants & \multicolumn{1}{l}{Size of Feature Set} & \multicolumn{1}{l}{Testing Accuracy} \\ \hline
+group A      & 10                                      & 0                                    \\
+group B      & 5                                       & 0                                    \\
+             &                                         &
+\end{tabular}
+\caption{My caption}
+\label{AccuracyComparison}
+\end{table}
+
+\subsection{Evaluating Feature Sets}
+
+When the participant was asked whether their final selection of features was intuitive, the participant used cause and effect relationships to explain why the features may be predictive of the target. For example, they stated that college and scholarship are predictive because "College, scholarship are all effected by grade." This shows that users rely on causal relationships they think may exist in the dataset when selecting for features. Furthermore, this participant who has taken a course on machine learning knew to remove redundant features. They stated that "Mother job and father job will influence the family income, and the family income will have an effect on family support.  They both have the similar influence for grade, so we only necessary pick family support." They understood that the improvements to the classifier will be minimal when adding the features, mother has job and father has job, because their influence on the target is captured in family support. Although this participant was not shown a causal graph of the dataset, they did rely on it for selecting features. It may be helpful for them to explicitly visualize and interact with a causal graph.
+
+
+\subsection { Comparing Models }
+The participants were asked to compare the performance of two different models. Participants successfully selected two trials to compare using the interface. They utilized the feature selection interface to visualize the difference in feature set of the two trials. They also used the metrics to explain the difference in performance. For example, participant 1 noted that two classifiers both with Markov blanket consistency score of 1.0 may have the same performance because there was little difference in their mutual information score. Participant 3 made a similar conclusion when he compare feature sets with similar feature sets and decided the additional feature may not be predictive of the target. By comparing the performances of similar feature sets, the participants were able to remove irrelevant feature.
+\chapter{Evaluation}
+%importance of evaluation
+Evaluation is important to assess the ability and the design of visuals in achieving their purpose. We conducted a user study to evaluate the system and its effectiveness at facilitating collaborative feature selection. In this chapter, we outline the purpose and focus of the evaluation. We describe the design and procedure of the evaluation study. The evaluation study consist of a series of tasks. Later in this chapter, we describe each tasks, explain the step of the workflow it is evaluating, and explain how it helps us answer our research questions.
+
+\section{ Objectives of the Evaluation }
+The three main focus of the evaluation aims to understand the system's effectiveness at facilitating collaborative feature selection, the interpretability of the visualizations, and the system's ability to facilitate exploration of feature space. Qualitative and quantitative evaluation methods are utilized to design task that answer specific research questions.
+
+\section{Research Questions}
+Specific research questions extended from the main focus of the evaluation. The research questions for the study are organized into three categories - effectiveness, interpretability, and exploration of feature space. The research questions are listed below.
+
+Effectiveness
+\begin{itemize}
+\item{Is the design of the application intuitive to the user?}
+\item{Does the user build a classifier with high performance?}
+\item{Does the built classifier reflect causal aspects accurately?}
+\item{Does the built classifier reflect feature importance accurately?}
+\end{itemize}
+
+Interpretability
+\begin{itemize}
+\item{Are the visuals produced by the application easy to read?}
+\item{Are the visuals correctly analyzed by the user?}
+\item{Can the user explain/interpret the certain feature set used to build the classifier? }
+\item{Can the user explain/interpret why a certain feature set may create a higher performing classifier than another feature set?}
+\item{Does each piece contribute to the overall interpretability? I.e. if the causal graph is removed, is it more difficult to explain the classifier’s performance?}
+\end{itemize}
+
+Exploration of Feature Space
+\begin{itemize}
+\item{Does the design of the application aid in feature exploration?}
+\item{How quickly can a user select the most relevant features?}
+\item{How quickly can a user filter out the most irrelevant features?}
+\item{How quickly can the user choose between features that directly influence the label versus indirectly influence the label?}
+\end{itemize}
+
+\section{ Version B }
+For the evaluation study, we created a separate application that does not incorporate prior knowledge about feature importance or causal relationships. The original application will be referred to as version A and the participants using version A are apart of group A, while the limited application will be referred to as version B and those participants are apart of group B.
+
+The only two steps in version B are feature selection and performance analysis as shown in figures \ref{fig:LabelFSInterface} and \ref{fig:PerformanceAnalysisPage}. The purpose of creating and evaluation version B is to determine the effects of integrating prior knowledge have on participants' feature selections, the number of trials performed during feature selection, the total time for the feature selection process, and other feature selection behaviors.
+
+\section{ Participants }
+Participants are recruited from the undergraduate and graduate students at Case Western Reserve University. Participants first answer a questionnaire about their major and knowledge of machine learning and classification. Participants are divided equally into group A and group B. When assigning participants to a group, we match two participants with similar characteristic and divide them between the groups. The characteristics we will used to match participants are major, age, and experience in machine learning. Participants in group A and B are further specified based on whether they majored in computer science (CS) or not. The number of participants in and information about group A and B are presented in table \ref{ParticipantInfo}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants &  \multicolumn{1}{l}{Version A} &  \multicolumn{1}{l}{Version B} \\ \hline
+CS           & 10        & 10        \\
+Other       & 5         & 5         \\ \hline
+\textbf{Total}        & \textbf{15}        & \textbf{15}        \\ \hline
+\end{tabular}
+\caption{Participants are grouped by which version of the system they are evaluating and whether they major in CS or not and which system they are evaluating. The number of participants in each group is reported. }
+\label{ParticipantInfo}
+\end{table}
+
+\section{Design of the Evaluation}
+The system is designed for users with basic knowledge and understanding of machine learning and classification. In the introductory material, the participants are given brief explanations about classification and feature selection, example of an use case, and necessary terminologies - such as accuracy, target label, etc. They are trained through a series of short introductory videos that explain each part of feature selection work flow, the functionalities, and visualization of the interface. The tutorial features a weather classification problem, which is trying to classifying tomorrow's weather condition as either sunny, rainy, or foggy based on today's weather metrics. The participants can interact with the system using the demonstration dataset. After they are familiarized and confident with the system, they proceed to the user study.
+
+To evaluate the visualization, we provide the participants with a specific scenario. The premise for the study is that the participant is developing a classifier for predicting student's letter grades (A, B, C, or F) based on information about the student such as whether they work a part time job or participate in extracurricular. They are asked to complete a series of tasks guiding them to select features that will help them predict student grades. The tasks test each step of the feature selection process and evaluate the research questions. The tasks are presented one after the other and are to be completed consecutively. If the participant is unable to answer the question using the system or does not want to performance a task, they can proceed onto the next task without completing the current task.
+
+Group B participants do not complete the first few tasks relating to prior knowledge. Group A and B both complete the same tasks relating to feature selection, performance analysis, and overall effectiveness of the application.
+
+Some tasks require the participants to interact with the interface, such as "You think that today's humidity is important for predicting tomorrow's weather. Express this knowledge using the system". To understand if the participants interpret the visualizations correctly, some tasks require written responses from the user, such as "What are the Markov blanket features of the target variable".
+
+During the evaluation process a tracking mechanism traces the participant's actions such as interactions with the graph, edits to the graph, moving features, etc. Using this tracking mechanism, we can measure time spent on each task, user interactions performed to accomplish each task, and correctness of their answer. The events are tracked and logged by keen, an application for tracking and analyzing user interactions. Events are analyzed to extract quantitative results about the effectiveness and usability of the system.
+
+\section { Pilot Study Findings }
+We conducted a pilot study before the evaluation study. Three participants evaluate version A and three participants evaluate version B for the pilot study. Observations from the pilot study are used to evaluate whether the design of study and the data collected help answer our research questions. Moreover, minor changes are made to the application based on results from the pilot study. The changes are described.
+
+In one of the task, participants edit the causal graph to reflect cause and effect relationships that they think may exist in the dataset. Participants are told to remove or edit relationships that do not make sense to them and add edges to represent relationships they think exist. Participants reversed many edges. For example, edges from family income to father job, family income to mother job, family support to family income are reversed by all three participants. One participant just made five edge reverse, while another participant added ten new edges and four edge removals. The frequency of edge reversals demonstrated that when given an example of the causal network's structure, humans are able to orient edge based on their prior knowledge. Since many causal discovery algorithms consist of two parts - discovering the skeleton of the network and orienting the edges, human background knowledge can be utilized for the second part as demonstrated by the participants. Moreover, we recognized the need for an edge reversal edit to condense a reversal edit from two graph interactions to one graph interaction. An edge reversal edit option is added to the application and used for the evaluation study.
+
+Another change we made is creating an default feature selection that consist of the target's Markov blanket features. We observe that many of trials consisted of feature sets that contained many Markov blanket features. For example, participant 2 and 3's Markov blanket consistency scores did not go below 0.75 which supports that feature selections often consist of many Markov blanket features. We recognize that the Markov blanket feature set is a great benchmark for participants to compare their feature selections against. During the pilot study, Markov blanket features are placed in the selected set by default, but a classifier is not created. We amended the system such that a default classifier is created from the Markov blanket feature set and labeled as trial 0 at the feature selection and the performance analysis step. This will help facilitate the comparison of performance and feature selection metrics between a selected feature set and the Markov blanket feature set. Moreover, in the new design, participants can make quick amendments to Markov blanket feature set whenever they want by selecting trial 0 during the feature selection step and then proceeding with the amendments.
+
+Lastly, we added an additional graph to the performance analysis step. We added the ROC curve graph that is described in section \ref{PASection}. This decision was made because the ROC curve and the area under the ROC curve (AUROC) are commonly used metrics for performance analysis and a visual method for accessing performance. Participants can select which pair of classifiers' ROC curves to plot and then visually compare the area under the curves to compare performance of the two classifiers.
+
+Moreover, we made minor changes to the wording of the user study instructions to prevent confusions that were expressed by participants during the pilot study. After the analysis and changes were made, we continue with the evaluations study.
+
+\section{Efficiency and Effectiveness of Expressing Feature Importance Interface}
+Task 1 assesses the effectiveness of the interface at expressing feature importance and intuitiveness of the visualization and interactions. Participants are informed that whether a student takes extra classes may be important for predicting their grade and that whether a student is admitted to college may be important but not as important as whether they take extra classes. Participants are instructed to express the importance of these features as well as their own ideas about which features are important for predicting student grades. The placement and grouping of features are logged and compared against the information provided in the task. This task is only relevant for group A and the following results describe their interactions.
+
+Every participants successfully completed the task; the average time to complete the task is shown in table \ref{FeatureImportanceTaskTime}. Participants were able to create two additional concentric circles, moved the most important feature, extra classes, into the innermost circle, and moved the second to most important feature, college, into the second circle (the order of completed actions does not matter). Based on efficiency in task completion, the interactions seem intuitive to participant and the interface and interaction effectively translating feature importance visually. Participant 1's feedback about the visual was that it was "easy to use and made sense".
+
+Moreover, participants are instructed to express feature importance of the other features as they see fit, only a few participants changed importance ranking of features that were not specified in the task description. Additional information about additional expressed feature importance is reported in table \ref{ExpressedAdditionalImportance}. These participants spend more time at this step - most likely because they spend more time recalling what they know about the relation between a feature and student grade and ranking that feature against the others.
+
+Furthermore, fewer participants made additional changes to feature importance compared to the number of participants who made additional changes to the causal graph. This behavior may indicate that cause and effect relationship is a more relevant or familiar concept to participants than ranking feature importance. Participants may be have found it difficult to determine how important a feature is relative to the other features.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lc}
+\hline
+Participants    & Avg Time (min) \\ \hline
+CS     & 0               \\
+Others & 0              \\ \hline
+\textbf{All}    & \textbf{0}             \\ \hline
+\end{tabular}
+\caption{Average time to express feature importance for CS students, other students, and all students.}
+\label{FeatureImportanceTaskTime}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants            & Expressed Additional FI & Did Not Express Additional FI \\ \hline
+\# of Participants      & 10                      & 10                            \\
+Avg Time (min)          & 5                       & 5                             \\
+Avg \# of additional FI & 15                      & 15                            \\ \hline
+\end{tabular}
+\caption{Additional information about participants who expressed and did not express additional feature importance (FI).}
+\label{ExpressedAdditionalImportance}
+\end{table}
+
+\section{ Effectiveness and Efficiency of Expressing Causal Relationship}
+Task 2 is design to test the effectiveness of the interface and interactions at expressing causal relationship. Participants are asked to express that participating in extracurricular is a cause of having a part time job and having family support is a cause of participating extracurricular.
+
+In the evaluation study, all participants successfully accomplished task 2. Most participants are able to express that participating in extracurricular is a cause of having a part time job by reversing the edge from job to extracurricular, while just a few removed that edge from job to extracurricular and then adding edge from extracurricular to job. All participants are able expressed that having family support is a cause of participating in extracurricular by adding an edge from family support to extracurriculars. Participants are able to choose the appropriate edit and successfully make edits in a reasonable amount of time - the average time for completing the task is reported in table \ref{GraphEditTimes}. Participants correctly interpret causal relationships expressed in the graph which demonstrated that the graph is a valid and efficient representation of causal relationships. Moreover, participants correctly represented the relationships describe in the task which demonstrates the understanding and the usability of the editing functionalities.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lc}
+\hline
+Participants & Avg Time (min) \\ \hline
+CS           &        0        \\
+Others       &       0         \\ \hline
+\textbf{All} & \textbf{0}    \\ \hline
+\end{tabular}
+\caption{Average amount of time participants spent editing causal graph. }
+\label{GraphEditTimes}
+\end{table}
+
+In addition, participants are told to remove or edit relationships that do not make sense to them and add edges to represent relationships they think exist. Some participants made additional edits to the graph, the number of which are detailed in table \ref{GraphEdits}. Since the participants are college students, their edits to the graph reflected their background knowledge about the causes and effects of a student's grade. For example, three participants added an edge from extracurricular to study time - the intuition being that students participating in extracurricular have less time to study. Edge reversals are the most frequent graph edits, which demonstrates that human can play a supportive role in causal discovery. Many causal discovery algorithms consist of two parts - discovering the skeleton of the network and orienting the edges; human background knowledge be utilized for the second part as demonstrated by the participants. For example, the original causal graphs built by GES have an edge from family income to mother has job representing a student's family income as a cause of whether the student's mother has a job. Many participants disagree with the algorithm's choice in orientation and reverse the edge because they, unlike the algorithm, understand the meaning of the features. This task demonstrate that humans often have an idea about the relationship and interaction between the features. Moreover, background knowledge can be useful for building a causal graph that accurately represent the true causal relationships in the dataset and is a useful tool for helping the user determine predictive features.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lccc}
+\hline
+Participants & \# of edge removals & \# of edge additions & \# of edge reversal \\ \hline
+CS           & 0             & 0              & 5           \\
+Other      & 4             & 10             & 4             \\ \hline
+\textbf{All} & \textbf{2}    & \textbf{3}     & \textbf{4}    \\ \hline
+\end{tabular}
+\caption {Summary of graph edits made by each group of participants.}
+\label{graphedits}
+\end{table}
+
+\section {Interpretability of Causal Graph}
+Task 3 asks participants to identify the indirect causes and effects of grade. Task 3 is design to evaluate the interpretability and readability of the causal graph. An additional purpose of task 3 is to evaluate whether the interactions such as clicking to highlight feature nodes help users interpret the graph. P
+
+Participants are able to correctly interpret causal relationships and features that are weakly and strongly relevant to the target. Most participants are able to identify indirect causes and effects of student grades from the causal graph. All participants interacted with the graph to identify weakly and strongly relevant features. The number of participants that utilized each functionality is reported in table \ref{GraphInteractions}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lccc}
+\hline
+Participants & Highlight MB & Highlight Path to/from Grade & Highlight Edge \\ \hline
+CS           & 10           & 10                           &                \\
+Others       & 5            & 5                            &                \\ \hline
+\textbf{All} & \textbf{15}  & \textbf{15}                  &  \textbf{}        \\ \hline
+\end{tabular}
+\caption{The number of participants that utilized the interactions with the causal graph. }
+\label{GraphInteractions}
+\end{table}
+
+All the participants highlighted the Markov blanket of a feature; highlighting the Markov blanket of the selected feature is the default interaction which may also explain why it is the function that all participants used. In comparison, only about X \% of all participants highlighted connected paths to or from the target. Another reason that the highlight Markov blanket function may be utilized much more than highlight connected path to the target function is that the participants could identify connections between a feature and the target with out having to use the highlight path function since the causal graph, with only twelve nodes, is small. Moreover, participants can also identify whether a feature is weakly relevant to the target by highlighting its Markov blanket and seeing if a target Markov blanket feature is highlighted.
+
+Lastly, few participants highlighted edges and not many edge were highlights. Edge highlights may be less important in this example because the graph is small without a high density of edges. For larger graphs with many edits, edit highlights may be more useful to correctly identify adjacent features to the selected edge.
+
+\section { Interpretability of Feature Selection Interface }
+Task 4 is design to assess the interpretability of the feature selection interface. It is the first task that both group A and B participants complete. The participants are given various questions that can be answered by reading the feature selection graph \ref{}. This task evaluates whether participants are able to correctly interpret the feature selection graph.
+
+First, participants are ask to correlate a set of feature values, has scholarship and participates in extracurricular, to student grades. In the dataset, there are 43 A, 63 B, and 12 C students with that set of features. Most participants filtered for the set of feature values to highlight examples fitting that set of feature values. Some participants place the features next to each other and gauged how many lines of each color connected the specified feature values. Since there is only slightly more B students than A students fitting that description, it is visually difficult to distinguish whether more A or B examples correlated to that set of feature values. Answers included A students, B students, and both A and B students. The frequency of each answer is reported in table \ref{InterpretFS1}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lc}
+\hline
+Answers & Frequency \\ \hline
+A       & 10        \\
+B       & 5         \\
+A, B    & 15        \\ \hline
+\end{tabular}
+\caption{}
+\label{InterpretFS1}
+\end{table}
+
+Visualizations can be misleading. That's why evaluation is important for verifying that visualization correctly communicates information. Because examples are displayed as lines, participants have to rely on the density of the lines that intersect a feature axis to determine the amount of examples that have that feature value. A subset of the participants in both groups commented it was difficult to tell whether there are more A or B students fitting the description. Participants are able to acknowledge gaps in their visual analysis. Even though we can get an accurate count of A and B students by presenting the data in a table, visuals are more efficient at communicating information. Participants are able to reach their decision quickly; counting the number of example in a table for each question will take more time.
+
+Second, participants are also ask to identify features that distinguish or separate A from F students and those that distinguish B and C students.  We did not explicitly quantify a distinguishing feature. To distinguish label u from label v, for each feature, we calculate the ratio of the more frequent label to less frequent label for each feature value. If the ratio is 4 or greater for each of feature value (meaning there is 4 times more of the frequent label than the less frequent label for each feature value), then the feature distinguishes label u from label v. For A and F students, study time, extra classes, college, and scholarship have a ratio of 4 or more for every feature value. For B and C students, only scholarship, college, and study time have ratio of 4 or more. We calculated how many distinguishing features participants are able to identify.
+
+Participants did not identify all features that distinguish A from F and B from C students. The number of features identified by participants of each group are shown in table \ref{DistinguishingFeatures}. There may be many reasons why participants are not able to identify all distinguishing features. For example, some participants commented that the color associated with a label is visually stronger than that of another label. A subset of the participants utilize the filter for feature value functionality. Most participants utilize class label selection function to filter for label(s) of interest; they observe the density of colored lines to determine whether a feature distinguishes the two labels/colors. Although there are eleven features and it is feasible to individual assess each feature to determine if the feature separates two class labels, it is likely for participants to evaluate the entire graph and determine which features clearly separates the two colors. Moreover, for datasets with larger number of feature, we expect an user to be less likely to assess individual features and therefore the users are likely to not identify every distinguishing feature. We designed the system such that the user can build upon prior knowledge or previously established information. We hypothesize that the Markov blanket step and feature importance step will help users spot distinguishing features in the feature selection graph/visual.
+
+A participant commented that they had difficulties identifying patterns in feature selection graph because the placement of the feature affect the visual. The placement of the feature may obscure the correlation between a feature value and another feature that is placed further away. Participant attempted to figure out what pairs and groups of features distinguish A from F labeled examples by rearranging feature axes; however, they stated they can not exhaust all possible rearrangement of axes. Other participants also commented that it was easier to identify correlation between feature values when the feature axes are placed next to each other. The placement of the feature axes may be a contributing factor to why a feature was identified or not identified as separating two target labels. This is another example how visualizations can be misleading. Although visualization is a more efficient presentation of data, some information may be obscured. This is a ubiquitous challenge in data visualization. We have to sacrifice some clarity and certainty for the efficiency in visual data processing. We recognized that the uncertainty and ambiguity in the visual may increase with the increase in number of examples and features in the dataset.
+
+Even though version B does not build a causal graph, version B participants are asked which features they think may be causes or effects of student grades. We noticed that version B participants are likely to identify a distinguish feature when the feature is previously identified by the participant as being a cause or effect of target. Participants are interacting and viewing the feature selection graph with prior knowledge or information. Participants are relying on their intuitions about what features are important (causal features may be biased as important) to answer these questions. This behavior supports our design of incorporating prior knowledge into the feature selection process. The average number of features distinguishing two class labels that the groups of participants identified is presented in table \ref{DistinguishingFeatures}. There is no significant difference between the number of features group A and group B participants are able to identify. However, group B participants behavior support that causality may be a factor in identifying distinguishing features. Perhaps with a dataset with many more features, it would be more difficult for participants to rely solely on their intuitions about cause and effect relationship and therefore more difficult to complete this task.
+
+The average amount of time in minutes for participant to answer questions about patterns in the dataset is presented in table \ref{AvgTimeIdentifyPattern}. Participants are able to complete the task in an efficient manner by interpreting and interacting with the visualization. Identifying patterns or correlation between feature values would be more time consuming if the participants were presented with a table of the data or would require knowledge about data science which some of the participants did not have.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lc}
+\hline
+Participants & Avg Time (min) \\ \hline
+CS           & 10             \\
+Other        & 5              \\ \hline
+\textbf{All} & \textbf{15}    \\ \hline
+\end{tabular}
+\caption{The average amount of time for participants to complete the task of identifying patterns}
+\label{AvgTimeIdentifyPattern}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants & A and F & B and C \\ \hline
+CS (A)       & 10      &         \\
+Other (A)    & 5       &         \\
+\textbf{All (A)} & \textbf{}        &  \textbf{}       \\ \hline
+CS (B)       & 15      &         \\
+Other (B)    &         &         \\
+\textbf{All (A)} &   \textbf{} & \textbf{}        \\ \hline
+\end{tabular}
+\caption{The average number of features that were correctly identified as distinguishing A from F and B from C labels.}
+\label{DistinguishingFeatures}
+\end{table}
+
+
+\begin{table}[]
+\center
+\begin{tabular}{ll}
+Feature Name    & Code \\ \hline
+age             & A            \\
+college         & B            \\
+extraclasses    & C            \\
+extracurricular & D            \\
+familyincome    & E            \\
+familysupport   & F            \\
+fatherhasjob    & G            \\
+job             & H            \\
+motherhasjob    & I            \\
+scholarship     & J            \\
+studytime       & K
+\end{tabular}
+\caption{}
+\label{FeatureToCode}
+\end{table}
+
+\section { Feature Analysis Metrics }
+In task 5, the participants are tasked to create and analyze a set of features that is not the set of Markov blanket features. The participants are asked to identify whether Markov blanket features are covered and whether important features are in the feature selection. They are also asked how they arrived at their answers to assess if the visualizations are used as intended. Lastly, the participants are asked to compare the feature analysis metrics of the current feature selection against trial 0, which is the set of target Markov blanket features. The questions are assessing whether the visualizations help the participants determine the consistency of the current feature selection and connect the feature selection to previous expressed information. The purpose of the task is to evaluate the interpretability and effectiveness of the feature analysis view.
+
+In task 6, participants are tasked to create a classifier with the features selection from task 5. They are asked to compare the performance of this classifier to the classifier created using all the Markov blanket features of grade and whether they can explain the difference in performance if any. Task 6 analyzes whether the user can use the feature analysis metrics to explain the difference in performance between classifiers created with different feature sets.
+
+\subsection{ Reading Metric Graphs }
+All the participants are able to determined how many Markov blanket features are covered in the current feature selection by reading the Markov Blanket Consistency Chart. In addition, participants are also able to determine whether importance features are in the feature selection. A participant commented explained that they used the Feature Importance Consistency Pie Chart to look at whether "the green outer boxes corresponding to dark blue boxes", while others cited the rank loss score since higher loss means less consistency.
+
+Some participants noted that feature analysis allows them to refine their feature selection. Participant 2439 commented that when they "ended up not being very consistent with the causal graph nor with the feature importance selection" made them change their feature selection.
+
+\subsection { Comparing Metrics }
+Participants are able to describe the differences in feature analysis metrics between the current feature selection and trial 0, such as the MB score of trial 0 is greater than trial 1 and the rank loss of trial 0 is less than trial 0. However, most participants did not explain the difference.
+
+Participants connect or explain a classifier's performance using feature analysis metrics. Participant 891, who demonstrated a clear understanding of the meaning of the feature metric, related feature metric to the performance of the classifier. They stated that trial 9 had only half of the Markov blanket features hence MB score of 0.5 and may be a reason why trial 9’s feature selection was not as great as trial 0’s.
+Participants also use feature analysis metrics to help explain why a classifier may perform better than another classifier. For example, participant 9871 explained that trial 1 performed worst than trial 0 because in trial 1 "the selected feature didn't cover all of the contributing factors to grades (hence the low MB coverage score) and weren't the most important". Moreover, participant 2439 commented that trial 1 was "not very consistent with the causal graph nor the feature importance selection" and attributed those characteristics to the low performance of the classifier.
+
+\subsection { Metrics Guide Feature Selection }
+Some participants commented that they utilized the feature analysis graphs and those metrics influence a feature addition or removal.
+
+
+\subsection{ Analysis }
+The participants demonstrated a good understanding of feature analysis metrics. From the comments on comparing classifiers, participants understand that a feature selection with lower rank loss and higher MB score and MI score than another may be the reason for higher performance. However, not all participants demonstrated that they understand how rank loss score and MB score connects to the previously expressed prior knowledge.
+
+Some participants did not understand the concept of Markov blanket coverage. For example, participant 891 mentioned “sometimes removing Markov features from a feature selection did not remove the feature from being covered during the feature analysis”. These participants likely thought a feature in the Markov blanket Chart is covered if the feature is in the feature selection. The concept of coverage is explained in the introductory material but may still be foreign to the participants. The concept can be better explained in the future.
+
+
+\section{ Exploring Feature Space }
+Participants explore the feature space in task 7. Participants continue to build classifiers until they decided which feature set should be used to predict student grades. The questionnaire asked which features should be used to predict student grades and whether they can explain why the set of features is predictive of student grades. The participants are again asked to compare the performance and feature analysis metrics of two classifiers created with different sets of features. Feature selections, metrics about the feature sets, and classifiers performance are logged to analyze the participant's progress. Task 7 evaluates the ability of the application to allow the user to explore the space of feature sets. Moreover, the task evaluates the interpretability and usefulness of the feature metrics, the usability of the comparison functionality, and the usability of the feature selection graph.
+
+In this section, we describe how participants in group A and B explore the feature space and compare and contrast their behaviors.
+
+Results from both groups demonstrate the efficiency and usability of the interface and interactions. Participants did not have trouble dragging the feature axes to select features. All participant were able to attempt several trials in less than 30 minutes before deciding on the feature set to predict the target. The amount of time the participants in group A and B spent exploring the feature space is presented in table \ref{versionAvsversionB}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+                 & CS & Others \\ \hline
+avg \# of trials &    &        \\
+total time       &    &        \\
+time per trial   &    &        \\ \hline
+avg \# of trials &    &        \\
+total time       &    &        \\
+time per trial   &    &        \\ \hline
+\end{tabular}
+\caption{}
+\label{versionAvsversionB}
+\end{table}
+
+\subsection { Group A Observations}
+Group A participants initially start with the target’s Markov blanket features in the selected features set. They then proceed to make elementary changes to the feature selection, such as a feature addition or removal. Most participants are likely to add features than remove features from the set of target Markov blanket features. 
+
+
+Some participants commented that they utilize the feature analysis metrics to assess the feature selection before creating the classifier. For example, if features are removed and the MB score decreased significantly then the participant would reserve the removal of the feature. Give an example. 
+
+
+However, most participants admitted that the utilizes the performance of classifiers to guide their feature selection.
+
+
+Group A vs Group B
+
+Group A and B participants both utilized the performance of classifiers to guide their feature selection. For example, participants would add a feature to the current selection and if the new classifier performs significantly better than the other classifier than the feature is kept in the selection. On the other hand, if the feature does not improve selection, then they are removed from the selection. The technique helps participants filter for predictive features and filter out not predictive features from the unselected feature set. 
+
+Group A participants start with the feature set of target Markov Blanket features in the feature selection. Participants then make minor changes to the Markov blanket feature set. They make elementary changes to the Markov blanket feature set such as adding or removing a feature from the default feature set. Feature additions are more common than feature removals. Initially, participants do not deviate far from the Markov blanket feature set with some exceptions.
+
+Some participants commented that they analyzed the feature analysis before creating the classifier. After a feature is added or removed, they review the feature metrics which influences whether the change is reversed or not.
+
+The final feature set contains may Markov blanket features and importance features. Expressing prior information about feature importance and causal relationships help find predictive features. Report how many people have study time and college in their final feature selection.
+
+\subsection { Version B }
+Version B participants are presented with an empty set of selected features when first accessing the application. They are shown an empty set because prior information was not communicated to the system. Before they make feature selection, they are asked which features they think may be causes or effects of student grades.
+
+Participants relied on their intuition when selecting features and often selected features that they think are causal. When causal discovery is not integrated, participants have to rely on their instincts to figure out which features are direct or indirect causes or effects of the target and may be predictive of the target. However, participants identified different causal features and the initial feature selections varied greatly. By incorporating causality, we can help the user identify causal features that may be predictive.
+
+Moreover, by incorporating causality, participants can identify causal features that they many not have thought about. For example, while participants are able to identify direct causes and effects, they are less equip to identify indirect influences. GES can provide participants with a complete picture of causal relationships; the visual can help people identify indirect influences to the target that may help build a high performing classifier.
+
+On the other hand, some participants did not start with features that they identify as causal. They started by creating a classifier with a small set of features and added and removed features based on the accuracy of the resulting classifier. In one strategy, the participant focused on two features at a time. If the feature selection with one of the feature does better than the feature selection with the other, then only the one that improved the accuracy the most is kept in the feature selection. If their performance are similar, then the participant choose one of the two to kept in the feature selection.
+The feature selection functionalities help them uncover relevant features. They choose two feature - X and W . If the classifier with feature X perform as well as the classifier with feature W, then only one of the two features is kept in the next trial. If both features perform poorly, then both are removed. Participant recognized that including both scholarship and college in the final feature set is redundant. Removing one would not have made a significant different in accuracy. Participant made this connection in the 4th trial when he removed scholarship and kept college and there was less than 0.002 change in both training and testing accuracy. By showing causal graph, participant may be better equipped to identify redundant features rather than relying on solely guess and check.
+
+
+\subsubsection { Version A vs Version B }
+Participants using version A on average spend more time between trials. Participants using version A may be putting in more thought or reasoning about their selected feature set. Participants using version A spend more time between trials because they can evaluate metrics describing the consistency of the feature set to previous established information. On the other hand, participants using version B are more likely to use guesswork when selecting features. For example, some participants using version A complete only a few trials in a long stretch of time. On the other hand, participants using version B complete many trials in the a similar period of time.
+
+group A start with the MB features. group B most likely start with causal features.
+
+Version A participant feature selection are guided by feature metrics. Supported by more time spent per trial most likely because they review the feature analysis metrics before selecting features. Group A participants demonstrated that they understand the feature metrics and know how to compare feature metrics of different feature selections or trials. Participants have noted that when he saw that the feature selection had lower MB and MI score than trial 0, the participants changed the feature selection. Participants compare their feature selection to trial 0 and aim to get better MI score and/or lower rank loss score. Group A also perform less trials than group B. Group A is most likely ruling out certain feature sets because of feature metric scores. They are more likely to focus on a set of features because of the metrics.
+
+On the other hand, group B does not have a default classifier to compare their classifiers against and does not have metrics to guide their selection. They rely entirely on their intuition and on trial and error. That's why the initial feature sets are usually features they think are causal. Then they remove and add features based on whether the accuracy of the classifier improve.
+
+Trial and error is also a common technique in group A. The feature that they add or remove is often by random. However some participants do not create a classifier with that feature set if the metrics are low. Some participant towards later trials rely more on trial and error.
+Another trial and error technique observed in both groups is to remove and add features to the highest performing classifier. In both groups, the accuracy does not go up continuous. Participants select to display high performing classifiers and then incremental change them.
+
+Both group better at filtering out irrelevant features than filtering out redundant features. They can filter out irrelevant features by adding the feature, seeing performance of resulting classifier, and the remove feature if the performance did not improve significantly. However, the significant threshold differ individually - some participants kept the feature if it improve performance even slightly.
+
+Easier to evaluate the effect of a feature for a dataset with not that many features. Easier to find redundant features. Will be more difficult to identify redundant features and to move features when the number of features increase.
+
+After the initial feature sets are selected based on their perceived causality, participants filter for features that improve performance. They added new features one or two at a time; if the new features improved the performance, then the features were kept in the feature selection. Using th Towards the latter trials they were randomly adding or removing features from high performing feature sets to try to achieve better performance. For example, in trial 9, participant 2 used 6 features to create a model with 0.888 accuracy. Then in trial 10, they added an additional feature that increased the MB consistency score but only increased the mutual information score by 9 percent and did not increase model performance. As a result, participant removed the feature added in trial 10. This demonstrates that the scores can help explain the difference in performance of models - the additional feature did not provide information about the target as evident by the small change in mutual information score. This also demonstrated that after finding a set with high performance, participants modified the feature set to verify that they had the highest performing classifier. The functionalities of the interface enabled users to efficiently make modifications to previously used feature sets. The users were able visualize previous features sets and make feature additions and removals to them. Using this method, the participants were able to distinguish and remove irrelevant features.
+
+
+
+\section { Effectiveness of Feature Selection }
+The irrelevant features in the dataset are motherhasjob, fatherhasjob, age. The causal graph should reveal that these features are relevant. Age does not have an edge to or from any of the features which indicates that it is not related to any of the features.nMother has job and father has job are features that do not have a directed path to or from the target variable.
+
+Building the causal graph and expressing feature importance can help reveal predictive features to the participants. For example, study time and college are predictive features and are indicted as more important than the others during the feature importance step. Furthermore, in the original graph build by GES, the target's Markov blanket contains many predictive features. For example, scholarship and study time are parents of the target and are predictive features. Some participants (give a number) reversed the edge between the feature scholarship and the feature grade to show that a student grade is one of the causes of whether a student receives scholarship. Either way, scholarship and study time are likely to be in the target Markov blanket. In addition, in original graph, family support is a child of grade - meaning that whether the student receives family support is effected by the student’s grade. Extra classes is a spouse of the target - a student’s grade and whether the student takes extra classes are effecting whether the student has a part time job.
+
+It is noted that the original graph output by GES can be changed by ranking other features a most important during the expressing feature importance step. From the few participants who ranked other features as most important, the feature they indicated as most important are already in the Markov blanket of target even if they did not make that indication. Moreover, a participant can change the relationships between the target and a feature in the causal graph which can result in a change in the target's Markov blanket. However, participants did not remove edges to or from the target and more likely to reverse edges which more likely adds features to the target's Markov blanket. Therefore, the predictive features are likely to be in target's Markov blanket when the participant proceeds to the feature selection step. The data also shows that predictive features are in the Markov blanket.
+
+The feature selection step also helps discover predictive features. For example, scholarship is predictive and separates both A from F students and B from C students. In addition, study time separates B from C students and is predictive. However, it is noted that not all the participants were able to identify scholarship and/or study time as a distinguishing feature in the previous step.
+
+Relevant feature sets and their testing accuracy are reported in table \ref{relevantFS}.
+
+As shown in table \ref{RevelantFSBasedOnCausal} and \ref{RelevantFSBasedOnImportance}, group A participants more frequently include relevant features in their final feature set. Group A participants also exclude irrelevant features.
+
+Group A participants are likely to include Markov blanket features in the final feature set.
+
+\begin{table}[]
+\centering
+\begin{tabular}{ll}
+\hline
+Feature Sets                                               & Accuracy \\ \hline
+extra classes, family support, scholarship, study time (4) & 0.886    \\
+extra classes, college, family support, study time (4)     & 0.876    \\
+                                                           &
+\end{tabular}
+\caption{My caption}
+\label{relevantFS}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lccc}
+\hline
+Participants & \multicolumn{1}{l}{age} & \multicolumn{1}{l}{mother has job} & \multicolumn{1}{l}{father has job} \\ \hline
+group A      & 10                      &                                    &                                    \\
+group B      & 5                       &                                    &
+\end{tabular}
+\caption{The number of participants in each group that included the irrelevant features.}
+\label{IrrelevantFeatures}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants & \multicolumn{1}{l}{study time} & \multicolumn{1}{l}{college} \\ \hline
+group A      & 10                             &                             \\
+group B      & 5                              &
+\end{tabular}
+\caption{My caption}
+\label{RelevantFSBasedOnImportance}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lccc}
+\hline
+Participants & \multicolumn{1}{l}{scholarship} & \multicolumn{1}{l}{extra classes} & \multicolumn{1}{l}{family support} \\ \hline
+group A      & 10                              & 0                                 & 0                                  \\
+group B      & 5                               & 0                                 & 0
+\end{tabular}
+\caption{My caption}
+\label{RevelantFSBasedOnCausal}
+\end{table}
+
+\begin{table}[]
+\centering
+\begin{tabular}{lcc}
+\hline
+Participants & \multicolumn{1}{l}{Size of Feature Set} & \multicolumn{1}{l}{Testing Accuracy} \\ \hline
+group A      & 10                                      & 0                                    \\
+group B      & 5                                       & 0                                    \\
+             &                                         &
+\end{tabular}
+\caption{My caption}
+\label{AccuracyComparison}
+\end{table}
+
+\subsection{Evaluating Feature Sets}
+
+When the participant was asked whether their final selection of features was intuitive, the participant used cause and effect relationships to explain why the features may be predictive of the target. For example, they stated that college and scholarship are predictive because "College, scholarship are all effected by grade." This shows that users rely on causal relationships they think may exist in the dataset when selecting for features. Furthermore, this participant who has taken a course on machine learning knew to remove redundant features. They stated that "Mother job and father job will influence the family income, and the family income will have an effect on family support.  They both have the similar influence for grade, so we only necessary pick family support." They understood that the improvements to the classifier will be minimal when adding the features, mother has job and father has job, because their influence on the target is captured in family support. Although this participant was not shown a causal graph of the dataset, they did rely on it for selecting features. It may be helpful for them to explicitly visualize and interact with a causal graph.
+
+
+\subsection { Comparing Models }
+The participants were asked to compare the performance of two different models. Participants successfully selected two trials to compare using the interface. They utilized the feature selection interface to visualize the difference in feature set of the two trials. They also used the metrics to explain the difference in performance. For example, participant 1 noted that two classifiers both with Markov blanket consistency score of 1.0 may have the same performance because there was little difference in their mutual information score. Participant 3 made a similar conclusion when he compare feature sets with similar feature sets and decided the additional feature may not be predictive of the target. By comparing the performances of similar feature sets, the participants were able to remove irrelevant feature.

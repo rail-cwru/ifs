@@ -2,6 +2,7 @@
 \usepackage[acronym,shortcuts,nonumberlist]{glossaries}
 \usepackage[toc,title]{appendix}
 \usepackage{graphicx}
+\usepackage{siunitx}
 \usepackage{subcaption}
 \usepackage[rightcaption]{sidecap} % Change if double-sided layout
 \sidecaptionvpos{figure}{c}
@@ -42,13 +43,14 @@
 \tikzstyle{sdecision} = [diamond, aspect=1.5, minimum width=3cm, minimum height=1cm, text width=3.5cm, text badly centered, draw=black, inner sep=0pt]
 \tikzstyle{flowarrow} = [thick,->,>=stealth]
 \tikzstyle{flowarrow} = [thick,->,>=stealth]
-
+ 
 \tikzstyle{model} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text width=6cm, text badly centered, draw=black]
 \tikzstyle{contribution} = [rectangle, minimum width=3cm, minimum height=1cm, text width=3cm, text badly centered, draw=black]
 
 \definecolor{positivecolor}{RGB}{0,0,139}
 \definecolor{negativecolor}{RGB}{139,0,0}
 \definecolor{lightgray}{RGB}{215,215,215}
+\newunicodechar{′}{\textprime}
 
 \def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
@@ -113,7 +115,7 @@
 
 \title{Interactive Feature Selection}
 \author{Helen Zhao}
-\date{}
+\date{March 25, 2019}
 \degree{Master of Science}
 \doctype{dissertation}
 \department{Electrical Engineering and Computer Science}
@@ -122,9 +124,9 @@
 \begin{document}
 
 \advisor{Dr.\ Soumya Ray}
-\committee{}
-\committee{}
-\committee{}
+\committee{Dr. Xusheng Xiao}
+\committee{Dr. Michael Lewicki}
+\committee{Dr. Andy Podgurski}
 
 
 \maketitle
@@ -143,26 +145,32 @@
 \addcontentsline{toc}{chapter}{List of Figures}
 \listoffigures
 
-\begin{acknowledgments}
+%\begin{acknowledgments}
 
-\end{acknowledgments}
+%\end{acknowledgments}
 
 \begin{abstract}
+Interactive machine learning (IML) uses visual analytics to leverage human intelligence while using machine learning methods. This is a natural way to integrate expert knowledge into the learning process. Feature selection, a critical step in classification that uncovers informative feature sets, is a natural candidate for IML. Domain experts are often knowledgeable about feature semantics, relevance to the classification task, causal relationships between features; however, automated algorithms may impose limits on how to use such information. We hypothesize that a human-machine collaborative approach to feature selection that incorporates human prior knowledge will yield high performing and transparent classifiers. We develop a novel visual analytics platform for interactive feature selection that allows domain experts to visually express background knowledge about feature relevance and causal interaction. Then they dynamically, iteratively explore the feature space to uncover and compare predictive feature sets that are consistent with their prior knowledge. We evaluate our approach through user studies. Our study showed that our system enabled participants to efficiently and effectively express prior knowledge, explore the feature space, and identify patterns in the dataset. Participants found the system intuitive and easy to use. Participants who were able to utilize previously expressed prior knowledge are able to more efficiently explore the feature set space and were better able to explain the behavior of the learned classifiers. 
 
 \end{abstract}
 
 \mainmatter
 
-\input{thesis/introduction.tex}
+\input{introduction.tex}
 \cleardoublepage
-\input{thesis/background.tex}
+\input{background.tex}
 \cleardoublepage
-\end{document}
-
+\input{design.tex}
+\cleardoublepage
+\input{evaluation.tex}
+\cleardoublepage
+\input{conclusion.tex}
+\cleardoublepage
 \backmatter
 \cleardoublepage
 \phantomsection-
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{IEEEtran}
-\bibliography{thesis}
+\bibliography{mybibthesis}
 \end{document}
+

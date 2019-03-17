@@ -1,0 +1,367 @@
+\chapter{Evaluation} 
+\section{Participants}
+\textbf{ Version A }
+Computer Science Students Group
+- 2356 (Bobby)
+- 250 (David)
+- 783 (Imran)
+- 9871 Jason 
+
+- Brian (Pending)
+- Noah (Instructions sent)
+- Dan (Instructions sent)
+- Swetha (Instructions sent)
+- Sixiao (started)
+
+Others Group
+- 999999 (Andrew)
+- 61214 (Crystal)
+- 9871 Rachel 
+- Kyle 
+
+\textbf{ Version B }
+Computer Science Students Group
+- 54011 (Brian Guo)
+- 7878 (Ben)
+- 64011 (Bingwan Ma)
+
+- Ted (Instructions sent)
+- Annelisse (Instructions sent)
+
+Others Group
+- 5419 (Vivian)
+
+\section{Feature Importance}
+\subsection{ Task 1 - ranked extra classes as 0 and college as 1 }
+Computer Science Group 
+- 2356 correctly completed the task
+- 250 correctly completed the task
+- 783 correctly completed the task 
+
+
+Others Group
+- 999999 correctly completed the task
+- 61241 correctly completed the task
+- 9871 correctly completed the task 
+
+\subsection{ Expressed other features importance }
+Computer Science Group 
+- 2356 did not express additional feature importance information
+- 250 did not express
+- 783 did not express 
+
+Others Group
+- 999999 ranked study time as 0 & family support and college ranked as 1
+- 9871 ranked study time as 0 & family support, family income, college, scholarship as 1 
+
+
+\section{Causal Graph}
+\subsection{ Task 2: edge extracurriculars -> job and family support -> extracurriculars }
+Computer Science Group 
+- 2356 correctly completed the task
+- 250 correctly completed the task
+- 783 correctly completed the task (used add and remove instead of reverse)
+
+Others Group
+- 999999 correctly completed the task
+- 61241 correctly completed the task - added family support -> extracurriculars 
+- 9871 reversed extracurriculars to job and added edge from family support to extracurriculars
+
+\subsection { Other graph edits }
+Computer Science Group 
+- 2356 DID NOT add or remove edges
+- 250 DID NOT 
+- 783 DID NOT
+
+Others Group
+- 999999 
+    added age -> college, 
+- 61241 
+    added edge from job -> GRADE, added college -> extraclasses 
+    added 2 edge 
+    total time for graph edits 3 mins
+- 9871 
+    added college -> scholarship, college -> studytime, then reversed college -> studytime, removed familysupport -> familyincome, add edge age -> college, 
+    added 3 edges, reversed 1 edge, removed 1 edge
+    Total time: 14 mins
+
+
+\subsection{ Interactions with the graph }
+Computer Science Group 
+- 2356 - click few nodes few times to see MB
+- 250 - click few nodes few times to see MB
+- 783 - click few nodes few times to see MB
+
+Others Group
+- 999999 - click nodes to view MB blanket and clicked edges a few time
+- 61241 - clicked nodes many times to view MB blanket and path to/from feature
+- 9871 clicked nodes 24 times, only to highlight Markov blanket, clicked edges 10 times to clarify what nodes are adjacent to the edge. 
+
+\subsection { Reading Graphs }
+Computer Science Group 
+- 2356
+    correctly identified family support, family income as indirectly affecting grade through extracurricular
+    correctly identified college and studytime as affected by grade
+
+- 250 
+    correctly identified family support, family income as indirectly affecting grade through extracurricular
+    correctly identified college (missed studytime) as affected by grade
+
+- 783 
+    correct 
+
+Others Group
+- 999999 
+    correctly identified college as indirectly affecting grade through study time, 
+    correctly identified MB, 
+    correctly identified family income as indirectly affecting grade through extra classes 
+- 61241 
+    correctly identified family income, mother has job, father has job as affecting grade through extracurricular,
+    correctly identified MB
+    
+- 9871
+    correctly identified indirect causes and indirect effects of grade. Understood that indirect causes are parent of parent and indirect effects are child of child
+
+\subsection { Markov Blanket }
+Computer Science Group 
+- 2356 - Scholarship, extraclasses, extracurriculars, job (4)
+- 250 - all of them
+
+Others Group
+- 999999 - studytime, scholarship, extraclasses, extracurriculars, job (5)
+- 61241 - scholarship, college, family support, extracurriculars, job, extra classes (6)
+
+\section {Feature Selection}
+
+\subsection { Identifying Patterns }
+Version A
+Computer Science Group 
+- 2356 
+    A students (incorrect but the number of B students is only slightly more) 
+    scholarship, extra classes (2 out of 4)
+    scholarship, extra curriculars (1 out of 3) 
+    used class selection and filter feature values
+    
+- 250
+    B students (correct)
+    Scholarship, Extracurriculars, job, father has job, mother has job (2)
+    None (0 out of 3)
+    used class selection
+
+- 783 
+    A students. (incorrect but the number of B students is only slightly more) 
+    familysupport, extraclasses, familyincome, extracurriculars, college (2 out of 5) 
+    scholarship, extracurriculars, job, college (2 out of 3) 
+    looked at the density of lines to answer questions (which verifies our design of partitioning discrete features into its values)
+
+- 2439
+    students with A's and B's 
+    scholarship, extracurriculars, college, study time, family support (3 out of 4)
+    scholarship, extracurriculars, study time, college, extra classes, job (3 out of 3)
+    
+
+Others Group
+- 999999 
+    A (incorrect)
+    Extracurricular, job, studytime (3 out of 4)
+    scholarship, job, extracurricular (1 out of 3)
+    used class selection and filer feature values
+    
+- 61241 
+    B students (correct)
+    scholarship, extracurriculars (1 out of 4) 
+    scholarship, college ( 2 out of 4) 
+    used class selection and filer feature values
+
+- 9871
+    B students (correct)
+    scholarship, family income,  college (2 out of 4) 
+    scholarship, college, and study time (3 out of 3)
+    
+Version B
+Computer Science Group 
+- 54011
+    correctly identified B students
+    extracurriculars, scholarship, college, studytime (4) are significant between A and F (3 out 5)
+    scholarship, extracurriculars, studytime are significant between B and C (2 out of 3)
+    Identified patterns by selecting feature values or ranges and positioning relevant axes next to each other to see whether those features distinguish classes 
+    
+- 67011
+    identified feature values that are correlated scholarship == yes and extracurriculars == yes
+    college (1 out of 5)
+    college (1 out of 3)
+    Observed the density of lines. Did not utilize feature selection range
+    
+- 7878
+    Student who takes extraclasses is more likely to receive scholarship and do extracurriculars. Participant is able to visually identify association between feature values. 
+    college, extra classes significant between A and F. (2 out of 5)
+    scholarship, college, extra classes significant between B and C. (2 out of 3 significant features) 
+    
+    
+Others Group
+- 5419
+    family income, extra classes, extracurriculars, scholarship (2 out of 5) 
+    extracurriculars, scholarship, father has job, college (2 out of 2 but 2 extra)
+    
+
+    
+Most people used class selection to identify patterns in the data. 
+
+\subsection{ Version B - What users thinks is Causal}
+Version B
+Computer Science Group 
+- 54011
+    Features that may effect grade: familysupport, studytime, extracurriculars, familyincome
+    Features that may be effected by grade: college, scholarship
+
+- 67011
+    extracurriculars, extraclass, studytime, family income, family support
+    job, college, scholarship
+    
+- 7878
+    Mother/father has job, family support, family income
+    extracurriculars, studytime, extra classes, college, scholarships
+    
+Others Group
+- 5419
+    Extracurriculars, Study time, job, extra classes
+    college, scholarship
+
+    
+\subsection { Analyzing Feature Sets Metrics and Comparing Classifiers }
+Version A
+Computer Science Group 
+- 2356 
+- 250
+- 783
+    - used rank loss to compare feature sets. Noted that high rank loss indicates that the current feature set is not consistent with the information provided in the first
+    - correctly read Markov blanket pie chart 
+    - used ROC curves to compare performance
+    - used confusion matrix to see which classifier did better for which classes
+
+Others Group
+- 999999 
+- 61241 
+- 9871  
+    Correctly utilized the MB pie chart and feature importance chart to 
+    Utilized the metrics to compare classifiers
+    Utilized both the confusion matrix and ROC curve to compare the performances of classifiers
+
+\subsection { Selected Features, Number trials, total time }
+\subsubsection { Version A }
+Computer Science Group 
+- 2356 
+    extra classes, job, extracurriculars, study time
+    0.792
+     3 trials in 15 mins, 2nd trial is best trial 
+- 250 
+    all features
+    0.824
+    7 trials in 10 mins, 7th trial is the best trial 
+    
+- 783 
+    extracurriculars, college, job, scholarship, familyincome
+    0.656
+    3 trials in 15 mins, 2nd trial is the best trial
+    
+- 2439
+    scholarship, extracurriculars, college, study time, family support, extra classes
+    12 trials in 13 mins, 12th trial choosen trial
+    
+Less trials in small amount of time, used more time to do analysis 
+
+Others Group
+- 999999 
+    studytime, scholarship, extracurricular (3)
+    0.626
+    3 trials in 15 mins, 3rd was the best trial 
+
+- 61241 
+    scholarship, job, extracurricular, extra classes, family income
+    0.742 
+    15th trial in 20 mins , 15th was best trial
+    
+- 9871
+    Scholarship, study time, extracurriculars, job, family support, extra classes
+    10 trials, 8th trial best, 
+    0.856
+    
+    
+\subsubsection{ Version B }
+Computer Science Students Group
+- 54011 (Brian Guo)
+    studytime, familysupport, extraclasses, college (4)
+    0.868 accuracy
+    17 trials in 18 minutes, 17th trial is best. 
+
+- 7878 
+    scholarship, college, studytime, extra classes, extracurriculars (5)
+    0.826
+    6 trials, 6th trial is best trial, 9 mins
+    
+- 64011
+    family support,  study time, extracurriculars, extraclasses, college, job (6)
+    12 trials in 13 mins, 11th trial
+
+
+Others Group
+- 5419 (Vivian)
+    15 trials in 22 mins, 5th trial was the chosen trial
+    
+
+\subsection { General Observations }
+\subsubsection { Version A }
+Computer Science Group 
+- 2356 
+    - used feature analysis metric to analyze many feature sets before creating a classifier
+    
+- 250 
+    - used all the features on the 7th trial.
+    - thought all the features were relevant. Did not remove irrelevant features or thought each feature added a bit more information. May not have thought about optimizing for size of feature set. 
+- 783
+    - spend more thing analyzing the feature metrics before creating classifiers 
+
+Others Group
+- 999999 
+    - used the feature analysis metrics to analyze the influence of each feature and a group of features
+    - observed and guessed whether a feature is more predictive than another using the metrics
+    - participant said that the features that seem more predictive make sense that are predictive
+   
+
+- 61241 
+    - if the removed features didn’t affect accuracy that much then they left it out in later trials (attempts at removing irrelevant features
+    - if a removed feature affected accuracy, then they added back the feature. For example, when they removed scholarship, accuracy decreased a lot, then in future trial they added scholarship back. 
+    - initially started off with 8 features including the 4 Markov blanket features
+    - usually didn't remove more than 2 features at once. 
+    - usually did not remove and add features at the same time.
+    
+- 783
+    stated that some of the features they choose seemed intuitive. 
+    stated that for some parts of the process, they relied more on their intuition than on the visuals presented on the page. 
+    
+\subsubsection{ Version B }
+The participants are not provided with additional or prior information about features. The participants started with an empty set and had different methods of selecting features to create classifiers. 
+
+Computer Science Students Group
+- 54011 (Brian Guo)
+     
+    
+- 7878 (Ben)
+     When participant removed Humidity from selected features, the accuracy dropped significantly. However participant did not add humidity back to the selected feature set. May not have known how to visualize the difference between previous feature sets. The participant selected features that they thought effected student grades to create the first classifier. The participant answered that they thought mother/father has job, family support, family income would effect student grades and used that set of features to create their first classifier. Then added features that they thought would be effected by student grades in the second trial - such as study time, extracurriculars, college, scholarship.
+     
+- 64011 (Bingwan)
+    
+    
+    
+    
+    
+
+Others Group
+- 5419 (Vivian)
+    Participant mentioned using previous knowledge about features to select for features
+    Participant added features that may be correlated to student grades. 
+    Started with a small feature set - two features. Removed and added a new feature to discover if the new feature is predictive. Figured out extra classes is predictive and more predictive than extracurriculars because when they removed extra classes from a selected set with just extracurriculars and study time and added extracurriculars, the accuracy decreased from 0.82 to 0.57. When they added additional features individually to the set with study time and extracurriculars, the accuracy decreased. After a few more trials, they settled on studytime and extracurriculars
+
+Participants using version A tend to spend more time between trials. (Need to record time between trials)
+
+54011 and 64011 mentioned clicking to select features rather than dragging. 
