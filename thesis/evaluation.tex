@@ -408,21 +408,20 @@ Some participants did not understand the concept of Markov blanket coverage. For
 
 \subsection{ Explore Feature Space}
 In this section, we describe how participants in groups A and B explore the feature space and compare and contrast their behaviors.
+
 \begin{table}[]
 \centering
 \begin{tabular}{lcc}
 \hline
-                 & CS  \\ \hline
-avg \# of trials (A) &  7.3 $\pm$ 3.9        \\
-total time (A)       &  13.3 $\pm$ 3.4       \\
-\textbf{time per trial (A)}   &  \textbf{2.5 $\pm$ 1.5}         \\ \hline
-avg \# of trials (B) &  11  $\pm$ 5.7      \\
-total time (B)       &  13.8  $\pm$ 9.0      \\
-\texbf{time per trial (B)} &  \textbf{1.3 $\pm$ 0.7}          \\ \hline
+                     & Group A & Group B \\ \hline
+avg \# of trials     & 7.3 $\pm$ 3.9  & 11  $\pm$ 5.7 \\
+total time (min)     & 13.3 $\pm$ 3.4  & 13.8  $\pm$ 9.0  \\
+time per trial (min) & \textbf{2.5 $\pm$ 1.5} & \textbf{1.3 $\pm$ 0.7} \\ \hline
 \end{tabular}
 \caption{The average number of trials completed by group A and B participants and the time spend on the task. }
 \label{versionAvsversionB}
 \end{table}
+
 \subsubsection { Group A Observations }
 Group A participants start with the feature set of target Markov Blanket features in the feature selection. Participants then make minor changes to the Markov blanket feature set. They make elementary changes to the Markov blanket feature set such as adding or removing a feature from the default feature set. Feature additions are more common than feature removals. Initially, participants do not deviate far from the Markov blanket feature set with some exceptions.
 
@@ -447,9 +446,9 @@ Trial and error is also a common technique in group A and group B. Participants 
 
 On the other hand, group B participants have to verify their intuition and whether they selected predictive features by creating a classifier. As a result, group B participants create more classifiers and also start with a smaller set of selected features.
 
-Another trial and error technique observed in both groups is to remove and add features to the highest performing classifier. 6 (40\%) group A participants and 5 (50\%) group B participants In both groups, the accuracy does not go up continuously. The system stores the iterations of the feature sets and the classifiers and provides graphs to display the progress. Participants were able to compare performances of different iteration. They can then choose to select a previous iteration that performed better and make elementary changes to that feature set. The system is designed for the iterative process of classification and incorporates visuals for comparing performances of different iterations and stores information about previous information. These observations support that the iterative design helps the participants search for high performing classifiers by allowing them to search a subspace of predictive feature sets and comparing feature sets.
+Another trial and error technique observed in both groups is to remove and add features to the highest performing classifier; this was observed for 6 (40\%) group A participants and 5 (50\%) group B participants. In both groups, the accuracy does not go up continuously. The system stores the iterations of the feature sets and the classifiers and provides graphs to display the progress. Participants were able to compare performances of different iteration. They can then choose to select a previous iteration that performed better and make elementary changes to that feature set. The system is designed for the iterative process of classification and incorporates visuals for comparing performances of different iterations and stores information about previous information. These observations support that the iterative design helps the participants search for high performing classifiers by allowing them to search a subspace of predictive feature sets and comparing feature sets.
 
-We argued that incorporating human’s soft knowledge would be beneficial to the feature selection process. However, we need to be able to leverage their prior knowledge, visual, and analytical capabilities. In version B, although participants were able to recall features they thought may influence student grades, they had to rely mainly on trial and error to test their knowledge. On the other hand, in version A, participants were able to communicate to the system through visuals which features they thought were important. The system and the participants were able to collaboratively build a causal graph; the causal algorithm provided the participant with a possible picture of causal relationships based on suggestions from the participant about which features were important and the participants then correct the graph to more closely reflect their prior knowledge. As a result, group A participants got a more accurate and complete image of the causal relationship. Group A participants also started ahead of group B participants because they started with a set of causal features while group B started with the empty set. Group A had to verify whether the causal features were predictive, while group B had to verify that the feature they thought was important was actually predictive.
+We argued that incorporating human’s soft knowledge would be beneficial to the feature selection process. However, we need to be able to leverage their prior knowledge, visual, and analytical capabilities. Although group B participants were able to recall features they thought may influence student grades, they had to rely mainly on trial and error to test their knowledge. On the other hand, group A participants were able to communicate to the system through visuals which features they thought were important. The system and the participants were able to collaboratively build a causal graph; the causal algorithm provided the participant with a possible picture of causal relationships based on suggestions from the participant about which features were important and the participants then correct the graph to more closely reflect their prior knowledge. As a result, group A participants got a more accurate and complete image of the causal relationship. Group A participants also started ahead of group B participants because they started with a set of causal features while group B started with the empty set. Group A had to verify whether the causal features were predictive, while group B had to verify that the feature they thought was important was actually predictive.
 
 Moreover, results from both groups demonstrated the efficiency and usability of the interface and interactions. Participants did not have trouble dragging the feature axes to select features. All participants were able to attempt several trials in less than 30 minutes before deciding on the feature set to predict the target. The amount of time the participants in group A and B spent exploring the feature space is presented in table \ref{versionAvsversionB}.
 
@@ -471,7 +470,7 @@ Moreover, results from both groups demonstrated the efficiency and usability of 
 \begin{figure}
     \centering
     \includegraphics[width=.75\textwidth]{selectedfeaturethatarepredictive}
-    \caption{\textbf{Fraction of Selected Features that is Predictive }. The average fraction of the selected feature set that is predictive in each iteration for group A and group B. On average, a bigger fraction of group A's selected feature set is predictive. }
+    \caption{\textbf{Fraction of Selected Features that is Predictive }. The average fraction of the selected feature set that is predictive in each iteration for group A and group B. On average, a bigger fraction of group A's selected feature set is predictive.}
     \label{fig:selectedfeaturethatarepredictive}
 \end{figure}
 
@@ -512,11 +511,9 @@ extra classes, college, family support, study time (4)     & 0.876    \\ \hline
 \subsection { Group A Best Feature Selection }
 
 \subsubsection { Likely to include important features }
-All but two participants or about 86\%, included study time in their final feature selection as shown in table \ref{RelevantFSBasedOnImportance}. Study time is expressed as the most important feature during the expressing feature importance step. Study time is indicated as an important feature in the Feature Importance Consistency Chart and including it would lower the rank loss score. The most likely reason why study time is in the feature selection is that it was in the Markov blanket of student grade and in the default feature selection. Therefore, the important features indicated by the participant is taken into account when creating the causal graph and making the default feature selection. This helps the participant and the system filter for predictive features.
+11 participants or about 73\%, included extra classes in their final feature selection as shown in table \ref{RelevantFSBasedOnImportance}. Extra classes is expressed as the most important feature during the expressing feature importance step. Study time is indicated as an important feature in the Feature Importance Consistency Chart and including it would lower the rank loss score. The most likely reason why extra classes is in the feature selection is that it was in the Markov blanket of student grade and in the default feature selection. Therefore, the important features indicated by the participant is taken into account when creating the causal graph and making the default feature selection. This helps the participant and the system filter for predictive features.
 
 On the other hand, college was expressed as the second most important feature by all participants. Only 6 participants or about 40\% included college in the final feature selection. It is not in the target's Markov blanket for most of the participants and therefore, not in the default feature selection. This makes it less likely to be in the final feature set.
-
-Most of group B participants also included study time. Most likely because many participants (80\%) thought study time influences student grades. Moreover, many participants (60\%) are able to see that study time separates A from F students or B from C students. Therefore, the feature selection graph can also help participants visually identify predictive features.
 
 \subsubsection { Likely to exclude irrelevant features }
 All but 1 participants or about 93\% excluded motherhasjob and fatherhasjob in their final feature set with the exception of a participant who included all the features in their final feature selection, as shown in table \ref{IrrelevantFeatures}. In addition, all participants but two excluded age. Most participants did not include all three features in their trials. This is most likely because they were not apart of the target's Markov blanket and did not have a direct path to or from student grade in the causal graph. Causality is able to help participants filter out irrelevant features.
@@ -533,8 +530,8 @@ Expressing prior information about feature importance and causal relationships h
 \begin{tabular}{lccc}
 \hline
 Participants & \multicolumn{1}{l}{age} & \multicolumn{1}{l}{mother has job} & \multicolumn{1}{l}{father has job} \\ \hline
-group A      & 1 (6.6\%)                &  1 (6.6\%)     &  1 (6.6\%)                                  \\
-group B      & 1 (10\%)                 &  1 (10\%)   & 0 (0\%) \\\hline
+Group A      & 1 (6.6\%)                &  1 (6.6\%)     &  1 (6.6\%)                                  \\
+Group B      & 1 (10\%)                 &  1 (10\%)   & 0 (0\%) \\\hline
 \end{tabular}
 \caption{The number of participants in each group that included the irrelevant features.}
 \label{IrrelevantFeatures}
@@ -557,7 +554,7 @@ group B      & 8 (80\%)                       &  6  (60\%) & 3  (30\%)          
 \begin{tabular}{lccc}
 \hline
 Participants & \multicolumn{1}{l}{scholarship} & \multicolumn{1}{l}{extra classes} & \multicolumn{1}{l}{family support} \\ \hline
-group A      & 13 (86\%)   & 6 (40\%)  & 9 (60\%)  \\
+group A      & 13 (86\%)   & 11 (73\%)  & 9 (60\%)  \\
 group B      & 8 (80\%)     & 6 (60\%)  & 6 (60\%)  \\ \hline
 \end{tabular}
 \caption{The number of participants that included the feature in their best feature selection.}

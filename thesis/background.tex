@@ -153,6 +153,20 @@ Another algorithm for Bayesian network learning is Max-Min Hill Climbing \cite{M
 \end{algorithmic}
 \end{algorithm}
 
+\section{ Prior Knowledge in Machine Learning }
+Approaches in incorporating prior knowledge have been researched in the various learning systems. Common approaches describe and integrate domain or prior knowledge as logical rules such as propositional rules. or inductive logic. Unlike the algorithms and systems described in this section, we attempt to integrate prior knowledge through visualizations and user interactions. We hope to demonstrate that encoding prior knowledge in visualization is less complicated than encoding it as logic rules and would be more user-friendly. 
+
+\subsection{Neural Networks}
+Knowledge-based artificial neural networks (KBANN) incorporates domain knowledge with artificial neural networks (ANN). ANN is an empirical learning system that learns to recognize a category of objects by being shown a large set of examples. ANN requires little to no knowledge about the problem domain. Some of the problems of ANN that KBANN attempts to address are lengthy training times, difficult to choose good network topology, and difficult to interpret resulting classifier. 
+
+The first step of KBANN translates propositional rules about the domain into a neural net using the rules-to-networks algorithm. The rules have to be acyclic and expressed as Horn clauses - a disjunction of literals with at most one positive literal \cite{KBANN}. The second step runs a standard neural learning algorithm with a set of labeled training examples and outputs a classifier. 
+
+Other approaches to incorporate prior knowledge into neural networks have also been implemented - for example, translating symbolic knowledge in forms of rules \cite{Fu} and manually mapping prior knowledge into a neural network \cite{Katz}.
+
+\subsection{ Inductive Logic Programming }
+First-order inductive learning (FOIL) is a rule-based learning algorithm. Background knowledge is provided and expressed as relations which are statements whose Boolean value is determined by the value of the variable. For example, if $R$ is the predicate for ``is round", $R(x)$ represents variable $x$ is round and when $x$ equals ball the predicate equals true. The algorithm is given positive and negative examples of a relation and background knowledge and finds a concept that is consistent with the given information \cite{FOIL}. 
+ 
+
 \section{Visualization}
 \indent Machine learning problems often use complex, multivariate data sets that are difficult to explore and analyze. When calculating aggregated statistical measures from large datasets, information is lost from oversimplification and misleading information is created. Visualization helps translate raw data into useful, understandable information and is one of the most relevant knowledge extraction methods. Visual elements such as charts, graphs, maps effectively and efficiently translate trends, outliers, and patterns in the data.
 
