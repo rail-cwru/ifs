@@ -16,6 +16,8 @@ class CausalGraph:
         self.df = df
         self.removed_nodes = []
         self.init_causal_graph_dot_src(self.df, forbidden_edges, required_edges)
+        print "required_edges"
+        print required_edges
         self.forbidden_edges = forbidden_edges
         self.required_edges = required_edges
         self.graph_history = []
@@ -52,24 +54,29 @@ class CausalGraph:
         self.get_markov_blanket_nodes_indexes()
 
     def recalculate_causal_graph(self, feature_name_array, removed_edges):
+        self.graph_history.append({'edges': copy.copy(self.edges), 'dot_src': copy.copy(self.dot_src)})
         self.add_features_to_removed_feature_array(feature_name_array)
         df = self.df.drop(self.removed_nodes, axis=1)
-
-        self.init_causal_graph_dot_src(df, self.forbidden_edges, required_edges)
+        self.init_causal_graph_dot_src(df, self.forbidden_edges, self.required_edges)
         self.add_removed_nodes_to_node_list()
         self.remove_all_edges_from_edge_array(removed_edges)
         self.graph_calculations()
         self.dot_src = self.lines_to_dot_src(self.dot_src_lines)
-        self.graph_history.append({'edges': copy.copy(self.edges), 'dot_src': copy.copy(self.dot_src)})
+
 
     def undo_last_edit(self, editInfo):
         if editInfo['type'] == 'addEdge': # undo add edge
-            self.remove_edge_from_edge_array(editInfo['data'][0], editInfo['data'][1]) # remove edge from self.edges
+            self.remove_edge_from_graph(editInfo['data'][0], editInfo['data'][1]) # remove edge from self.edges
+            #self.graph_calculations()
+        elif editInfo['type'] == 'reverseEdge':
+            self.remove_edge_from_graph(editInfo['data'][1], editInfo['data'][0])
+            self.add_edge(editInfo['data'][0], editInfo['data'][1])
         elif editInfo['type'] == 'removeEdge':# undo edge removal
             new_edge = editInfo['data'][0] + ' -> ' + editInfo['data'][1]
             self.edges.append(new_edge)
+            self.graph_calculations()
         else: # undo node removal
-            self.remove_node_from_removed_nodes(editInfo['data'][0])
+            self.remove_node_from_removed_nodes(editInfo['data'])
             last_graph = self.graph_history.pop()
             self.edges = last_graph['edges']
             print self.edges
@@ -106,6 +113,11 @@ class CausalGraph:
         self.remove_edge_from_edge_array(edgeFrom, edgeTo)
         self.graph_calculations()
 
+    def reverse_edge(self, nodeFrom, nodeTo):
+        self.remove_edge_from_graph(nodeFrom, nodeTo)
+        self.add_edge(nodeTo, nodeFrom)
+
+
     def remove_all_edges_from_edge_array(self, edges_to_remove):
         for edge in edges_to_remove:
             edgeFrom = edge[0]
@@ -120,10 +132,33 @@ class CausalGraph:
                 self.edges.remove(edge)
                 break
 
+    def edge_introduced_cycle(self, node_from, node_to, new_edge):
+        self.edges.append(new_edge)
+        self.graph[node_from]['nodeTo'].append(self.graph[node_to]['nodeIndex'])
+        traversed_nodes = set()
+        #traversed_nodes.add(self.graph[node_from]['nodeIndex'])
+        has_cycle = self.found_cycle(node_from, node_from, traversed_nodes)
+        self.edges.remove(new_edge)
+        self.graph[node_from]['nodeTo'].remove(self.graph[node_to]['nodeIndex'])
+        return has_cycle
+
+    def found_cycle(self, start_node_str, current_node_str, set_of_visited):
+        if start_node_str in set_of_visited:
+            return True
+        for next_node_index in self.graph[current_node_str]['nodeTo']:
+            next_node_str = self.node_index_to_name_map[next_node_index]
+            set_of_visited.add(next_node_str)
+            if self.found_cycle(start_node_str, next_node_str, set_of_visited):
+                return True
+        return False
+
     def add_edge(self, node_from, node_to):
         new_edge = node_from + ' -> ' + node_to
-        self.edges.append(new_edge)
-        self.graph_calculations()
+        if self.edge_introduced_cycle(node_from, node_to, new_edge) == False:
+            self.edges.append(new_edge)
+            self.graph_calculations()
+            return True
+        return False
 
     def add_nodes_to_graph_dict(self, feature_name_array):
         for feature_name in feature_name_array:
@@ -478,7 +513,6 @@ class CausalGraph:
         for i, node_index in enumerate(self.graph[start_node_str]['nodeFrom']):
             node_str = self.node_index_to_name_map[node_index]
             paths = self.find_paths_from_class_node_helper(node_str)
-            print node_str, paths
             if paths == True:
                 self.graph[start_node_str]['pathsFrom'].add(self.graph[start_node_str]['edgeFrom'][i])
                 self.graph[start_node_str]['pathNodesFrom'].add(node_index)

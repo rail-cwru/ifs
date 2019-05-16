@@ -82,7 +82,7 @@ class FeatureData:
         self.calculate_previous_sum_feature_distribution()
 
     def create_default_class_display(self):
-        print self.class_names
+        #print self.class_names
         self.feature_data['classDisplay'] = dict()
         for class_name in self.class_names:
             self.feature_data['classDisplay'][class_name] = dict()
@@ -115,7 +115,6 @@ class FeatureData:
                 feature_range = []
                 name = self.feature_data['features'][i]['name']
                 column_data = self.features[name]
-                print column_data
                 feature_range.append(min(column_data))
                 feature_range.append(max(column_data))
                 self.feature_data['features'][i]['range'] = feature_range
@@ -176,26 +175,29 @@ class FeatureData:
                 feature_name = feature['name']
                 self.feature_mapping[feature_name] = dict()
                 values_sorted = sorted(feature['values'])
-                print feature
-                value_num = []
+                #value_num = []
+                #current_sum = 0.0
                 for i, value in enumerate(values_sorted):
-                    self.feature_mapping[feature_name][value] = float(i)
-                    value_num.append((self.features[feature_name] == value).sum())
-                self.feature_mapping[feature_name]['increment'] = 1.0/max(value_num)
+                    self.feature_mapping[feature_name][value] = dict()
+                    self.feature_mapping[feature_name][value]['current_value'] = float(i)
+                    #current_sum += float((self.features[feature_name] == value).sum())
+                        #self.feature_mapping[feature_name][value]['current_value'] = float((self.features[feature_name] == values_sorted[i-1]).sum()) /self.num_examples  #float(i)
+                    value_increment = 1.0/((self.features[feature_name] == value).sum() + 1)
+                    self.feature_mapping[feature_name][value]['increment'] = value_increment
+                    #value_num.append((self.features[feature_name] == value).sum())
+                #self.feature_mapping[feature_name]['increment'] = 1.0/max(value_num)
 
     def convert_example(self, example):
         converted = copy.copy(example)
         for feature in self.feature_data['features']:
             if feature['type'] == 'nominal':
-                #print feature['index']
-                #print self.feature_mapping[feature['name']]
-                #print example[feature['index']]
-                converted[feature['index']] = self.feature_mapping[feature['name']][example[feature['index']]]
-                self.feature_mapping[feature['name']][example[feature['index']]] += self.feature_mapping[feature['name']]['increment']
+                converted[feature['index']] = self.feature_mapping[feature['name']][example[feature['index']]]['current_value']
+                self.feature_mapping[feature['name']][example[feature['index']]]['current_value'] += self.feature_mapping[feature['name']][example[feature['index']]]['increment']
         return converted
 
     def convert_discrete_to_continous(self):
         self.init_feature_mapping()
+        #print self.feature_mapping
         self.feature_data['convertedData'] = []
         #num_examples = len(self.feature_data['inputData'])
         for data in self.feature_data['inputData']:
@@ -394,7 +396,6 @@ class FeatureData:
     def update_class_selection(self, update_class_name, current_display):
         new_display = not current_display
         self.feature_data['classDisplay'][update_class_name][FeatureData.TP_KEY]['display'] = new_display
-        print self.feature_data['classDisplay'][update_class_name][FeatureData.TP_KEY]['display']
         self.init_data_no_predictions()
         #for name in self.class_names:
         #    for classification in FeatureData.CLASSIFICATIONS:
@@ -421,7 +422,7 @@ class FeatureData:
         #print X[0,:]
         #print X[1,:]
         self.MI = self.calculate_joint_probabily(X)
-        print self.MI
+        print ("MI: " + str(self.MI))
         # map { yvalue: p(y)}
 
     def calculate_proba_y(self):
@@ -430,7 +431,7 @@ class FeatureData:
         self.class_proba = dict()
         for yvalue in all_y_values:
             self.class_proba[yvalue] = (self.target[self.target_name] == yvalue).sum() / float(self.num_examples)
-        print self.class_proba
+        #print self.class_proba
 
     def calculate_joint_probabily(self, X):
         MI = 0
@@ -497,11 +498,10 @@ class FeatureData:
                     for feature_j in feature_rank_to_feature_name[rank]:
                         feature_j_value = self.feature_selection_function(selected_features_names, feature_j)
                         loss += self.logistic_function(feature_s_value - feature_j_value)
-        print ('pairwise loss: ' + str(loss))
+        #print ('pairwise loss: ' + str(loss))
         return loss
 
     def calculate_rank_loss_listwise(self, feature_name_to_rank_map, selected_features_names):
-        print selected_features_names
         loss = 0.0
         feature_rank_to_feature_name = dict()
         for feature_name in feature_name_to_rank_map.keys():

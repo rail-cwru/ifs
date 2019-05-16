@@ -16,11 +16,12 @@ class CausalGraph extends React.Component {
       graphviz: null,
       addEdge: false,
       removeEdge: false,
+      reverseEdge: false,
       removeNode: false,
       selectInteraction: ["Highlight Selected", "Edit Graph"],
       selectedInteraction: "Highlight Selected",
       selectOptions: ["Markov Blanket", "Path to/from Target"],
-      editOptions: ["Select Graph Edit", "Add Relation", "Remove Relation", "Remove Feature"],
+      editOptions: ["Add Relation", "Remove Relation", "Reverse Relation", "Remove Feature"],
       markovBlanketSelected: true,
       selectedNode: "",
       selectedEdge: "",
@@ -48,6 +49,7 @@ class CausalGraph extends React.Component {
     this.removeNodeClass = this.removeNodeClass.bind(this);
     this.removeEdgeClass = this.removeEdgeClass.bind(this);
     this.removedEdgeFromGraph = this.removedEdgeFromGraph.bind(this);
+    this.reverseEdgeFromGraph = this.reverseEdgeFromGraph.bind(this);
     this.addRemovedEdgeToGraph = this.addRemovedEdgeToGraph.bind(this);
     this.sendEdgeRemoved = this.sendEdgeRemoved.bind(this);
     this.addClassToElements = this.addClassToElements.bind(this);
@@ -62,7 +64,6 @@ class CausalGraph extends React.Component {
   }
 
   renderGraph() {
-
       if (this.props.dotSrc) {
           this.state.graphviz.renderDot(this.props.dotSrc);
           var element = document.getElementById('graph-overlay');
@@ -153,15 +154,25 @@ class CausalGraph extends React.Component {
 
   removedEdgeFromGraph(nodeFrom, nodeTo) {
     var graph = this.props.getGraphDataToLog(this.props.graph);
-    client.recordEvent('graph_history', {
+    this.props.client.recordEvent('graph_history', {
         user: userID,
-        edit: "remove_edge",
+        type: "remove_edge",
+        info: [nodeFrom, nodeTo],
+        graph: graph
+    });
+    this.props.sendData("/removeEdge", { nodeFrom: nodeFrom, nodeTo: nodeTo });
+  }
+
+  reverseEdgeFromGraph(nodeFrom, nodeTo) {
+    var graph = this.props.getGraphDataToLog(this.props.graph);
+    this.props.client.recordEvent('graph_history', {
+        user: userID,
+        type: "reverse_edge",
         info: [nodeFrom, nodeTo],
         graph: graph
     });
 
-    this.props.sendData("/removeEdge", { nodeFrom: nodeFrom, nodeTo: nodeTo });
-
+    this.props.sendData("/reverseEdge", { nodeFrom: nodeFrom, nodeTo: nodeTo });
   }
 
   addRemovedEdgeToGraph(edgeFromTo, edgeId) {
@@ -177,8 +188,6 @@ class CausalGraph extends React.Component {
       //const index = this.state.graph[nodeTo].nodeFrom.indexOf(nodeFromIndex)
       this.props.graph[nodeTo].nodeFrom.push(nodeFromIndex)
       this.props.graph[nodeTo].edgeFrom.push(parseInt(edgeId.slice(5)) + 1)
-      console.log(this.props.graph[nodeFrom])
-      console.log(this.props.graph[nodeTo])
   }
 
   edgeClicked(element) {
@@ -203,24 +212,32 @@ class CausalGraph extends React.Component {
         nodeTo = nodes[0]
     }
 
-    client.recordEvent('causal_graph_clicks', {
+    this.props.client.recordEvent('causal_graph_clicks', {
         user: userID,
+        datasetName: this.state.datasetName,
         type: "edge",
         info: [nodeFrom, nodeTo]
     });
 
-    if (!this.state.removeEdge) {
-        d3.select('#node' + nodeFromIndex.toString()).raise().classed("selected-edgenode", true)
-        d3.select('#node' + nodeToIndex.toString()).raise().classed("selected-edgenode", true)
-        d3.select('#edge' + (edge).toString()).raise().classed("selected-edge", true)
-        this.state.selectedEdge = '#edge' + (edge);
+    if (this.state.removeEdge) {
+      let selectedEdgeFromTo = [nodeFrom, nodeTo];
+      this.state.selectedEdge = "";
+      this.state.removedEdges.push(selectedEdgeFromTo);
+      this.state.edits.push({ "type": "removeEdge", "data": selectedEdgeFromTo });
+      this.removedEdgeFromGraph(nodeFrom, nodeTo);
+    } else if (this.state.reverseEdge) {
+      let selectedEdgeFromTo = [nodeFrom, nodeTo];
+      this.state.selectedEdge = "";
+      this.state.edits.push({ "type": "reverseEdge", "data": selectedEdgeFromTo });
+      this.reverseEdgeFromGraph(nodeFrom, nodeTo);
     } else {
-        let selectedEdgeFromTo = [nodeFrom, nodeTo];
-        this.state.selectedEdge = "";
-        this.state.removedEdges.push(selectedEdgeFromTo);
-        this.state.edits.push({ "type": "removeEdge", "data": selectedEdgeFromTo });
-        this.removedEdgeFromGraph(nodeFrom, nodeTo);
+      d3.select('#node' + nodeFromIndex.toString()).raise().classed("selected-edgenode", true)
+      d3.select('#node' + nodeToIndex.toString()).raise().classed("selected-edgenode", true)
+      d3.select('#edge' + (edge).toString()).raise().classed("selected-edge", true)
+      this.state.selectedEdge = '#edge' + (edge);
     }
+
+
   }
 
   addClassToElements(elements, idPreFix, newClass) {
@@ -234,10 +251,9 @@ class CausalGraph extends React.Component {
       console.log(nodeName)
       var element = document.getElementById('graph-overlay');
       element.style.visibility = "visible";
-      this.state.edits.push({ "type": "removeNode", "data": this.state.selectedNode });
-      //const removedNode = this.state.selectedNode;
+      this.state.edits.push({ "type": "removeNode", "data": nodeName });
       this.state.selectedNode = "";
-      console.log(this.state.removedEdges);
+      //console.log(this.state.removedEdges);
       this.props.sendData("/redrawGraph", {features: [nodeName], removedEdges: this.state.removedEdges });
   }
 
@@ -263,9 +279,9 @@ class CausalGraph extends React.Component {
               const secondNode = element.key;
               this.state.selectedNode = "";
               this.state.selectedEdge = "";
-              //this.state.addEdge = false;
               this.state.edits.push({ "type": "addEdge", "data": [firstNode, secondNode] });
               this.props.sendData("/addEdge", {"nodeFrom": firstNode, "nodeTo": secondNode });
+              d3.selectAll('.node').classed("selected-node", false); // remove highlight
           } else {
               this.state.selectedNode = element.key;
           }
@@ -273,16 +289,24 @@ class CausalGraph extends React.Component {
       else if (this.state.markovBlanketSelected) {
           this.highlightMB(nodeInfo);
 
-          client.recordEvent('causal_graph_clicks', {
+          this.props.client.recordEvent('causal_graph_clicks', {
               user: userID,
-              type: "node",
+              datasetName: this.state.datasetName,
               info: element.key,
+              type: "node",
               markovBlanket: this.state.markovBlanketSelected
           });
 
           this.state.selectedNode = element.key;
       } else {
           this.highlightPath(nodeInfo);
+          this.props.client.recordEvent('causal_graph_clicks', {
+              user: userID,
+              datasetName: this.state.datasetName,
+              info: element.key,
+              type: "node",
+              markovBlanket: this.state.markovBlanketSelected
+          });
           this.state.selectedNode = element.key;
       }
   }
@@ -312,8 +336,10 @@ class CausalGraph extends React.Component {
   }
 
   undo() {
+      console.log(this.state.removedEdges);
       var lastEdit = this.state.edits.pop();
-      if (lastEdit.type == 'removedEdges') {
+      console.log(lastEdit)
+      if (lastEdit.type == 'removeEdge') {
           this.state.removedEdges.splice(this.state.removedEdges.indexOf(lastEdit.data), 1)
       }
       this.props.undo(lastEdit);
@@ -332,7 +358,7 @@ class CausalGraph extends React.Component {
   changeInteraction(event) {
 
       let interaction = event.target.value;
-      if (interaction == this.state.selectInteraction[0] && this.state.selectedInteraction != this.state.selectInteraction[0]) {
+      if (interaction == this.state.selectInteraction[0] && this.state.selectedInteraction != this.state.selectInteraction[0]) { // select Highlight Selected
           this.setState({
               selectedInteraction: this.state.selectInteraction[0],
               markovBlanketSelected: true,
@@ -343,17 +369,20 @@ class CausalGraph extends React.Component {
               selectedEdge: ""
           });
       }
-      if (interaction == this.state.selectInteraction[1] && this.state.selectedInteraction != this.state.selectInteraction[1]) {
+      if (interaction == this.state.selectInteraction[1] && this.state.selectedInteraction != this.state.selectInteraction[1]) { // select Edit Graph
           this.setState({
               selectedInteraction: this.state.selectInteraction[1],
               removeEdge: false,
               removeNode: false,
-              addEdge: false
+              addEdge: true,
+              selectedNode: "",
+              selectedEdge: ""
           });
       }
   }
 
   changeDisplay(event) {
+    console.log( event.target.value );
     let display = event.target.value;
     if (display == this.state.selectOptions[0] && this.state.markovBlanketSelected == false) {
         this.setState({
@@ -367,34 +396,38 @@ class CausalGraph extends React.Component {
     }
   }
 
-  setEditStatus(addEdge, removeEdge, removeNode) {
+  setEditStatus(addEdge, removeEdge, reverseEdge, removeNode) {
       this.state.addEdge = addEdge;
       this.state.removeEdge = removeEdge;
       this.state.removeNode = removeNode;
+      this.state.reverseEdge = reverseEdge;
       this.state.selectedNode = "";
       this.state.selectedEdge = "";
   }
 
   changeEdit(event) {
+    console.log( event.target.value );
       let editName = event.target.value;
       if (editName == this.state.editOptions[0]) {
-        this.setEditStatus(false, false, false);
+        this.setEditStatus(true, false, false, false);
       } else if (editName == this.state.editOptions[1]) {
-        this.setEditStatus(true, false, false);
-      } else if (editName == this.state.editOptions[2]) {
-        this.setEditStatus(false, true, false);
+        this.setEditStatus(false, true, false, false);
+      } else if (editName == this.state.editOptions[2]) { //reverse edge
+        this.setEditStatus(false, false, true, false);
+      } else if (editName == this.state.editOptions[3]) { // remove node
+        this.setEditStatus(false, false, false, true);
       } else {
-        this.setEditStatus(false, false, true);
+        //this.setEditStatus(false, false, true);
       }
   }
 
 
   render(){
-    //console.log('graph');
     console.log(this.props);
     var colorMB = this.state.markovBlanketSelected ? "yellowgreen" : "darkgray";
     var legend = (this.state.markovBlanketSelected) ? this.state.legendMB : this.state.legendPath;
     var secondSelect =  (this.state.selectedInteraction == this.state.selectInteraction[0]) ? this.state.selectOptions : this.state.editOptions;
+    let defaultSelect = (this.state.selectedInteraction == this.state.selectInteraction[0]) ? this.state.selectOptions[0] : this.state.editOptions[0];
     var secondSelectOnChange = (this.state.selectedInteraction == this.state.selectInteraction[0]) ? this.changeDisplay : this.changeEdit;
     return (
       <div width={700} height={500}>
@@ -410,7 +443,7 @@ class CausalGraph extends React.Component {
               <div className={"causal-graph-select-div"}>
                   <select className={"causal-graph-select"} onChange={ secondSelectOnChange }>
                       {secondSelect.map((edit) =>
-                          <option value={edit}>{edit}</option>
+                          <option selected={(edit == defaultSelect) ? "selected" : ""} value={edit}>{edit}</option>
                       )}
                   </select>
               </div>

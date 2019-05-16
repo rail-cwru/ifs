@@ -17,6 +17,7 @@ from flask import Flask, render_template, flash, request, redirect, jsonify, url
 from werkzeug.utils import secure_filename
 from scipy.stats import rankdata
 
+DATASET_NAME = ''
 DATA_FOLDER = 'static/synthetic_data2/'
 #DATA_FOLDER = 'static/cardiotocography3/'
 #DATA_FOLDER = 'static/student_performance/'
@@ -60,25 +61,40 @@ def upload_file():
 @app.route("/index")
 def uploaded_file():
     global DATA_FOLDER
+    global DATASET_NAME
     DATA_FOLDER = UPLOAD_FOLDER
+    DATASET_NAME = 'uploaded'
     return render_template('index.html')
 
 @app.route("/demo")
 def demo():
     global DATA_FOLDER
+    global DATASET_NAME
     DATA_FOLDER = 'static/demo/'
+    DATASET_NAME = 'demo'
     return render_template('index.html')
 
 @app.route("/dataset1")
 def dataset_1():
     global DATA_FOLDER
+    global DATASET_NAME
     DATA_FOLDER = 'static/synthetic_data2/'
+    DATASET_NAME = 'dataset1'
     return render_template('index.html')
 
 @app.route("/dataset2")
 def dataset_2():
     global DATA_FOLDER
     DATA_FOLDER = 'static/synthetic_data1/'
+    DATASET_NAME = 'dataset2'
+    return render_template('index.html')
+
+@app.route("/dataset3")
+def dataset_3():
+    global DATA_FOLDER
+    global DATASET_NAME
+    DATA_FOLDER = 'static/MedicalDataset/'
+    DATASET_NAME = 'medicaldataset'
     return render_template('index.html')
 
 @app.route("/getFeatures")
@@ -86,7 +102,6 @@ def get_features_data_folder():
     return initialize_data()
 
 def initialize_data():
-    print DATA_FOLDER
     des = dict()
     if os.path.exists(DATA_FOLDER + 'description.csv'):
         des = parse_description(DATA_FOLDER + 'description.csv')
@@ -109,6 +124,7 @@ def initialize_data():
     interface_data['classNames'] = list(FEATURE_DATA.class_names)
     interface_data['description'] = des
     interface_data['targetName'] = class_name
+    interface_data['datasetName'] = DATASET_NAME
     return jsonify(interface_data)
 
 @app.route("/initializeGraph", methods=['POST'])
@@ -125,7 +141,18 @@ def initialize_graph():
 def remove_edge_from_dot_src():
     if request.method == 'POST':
         data = json.loads(request.data)
+        print ("remove edge: " + str(data['nodeFrom']) + " -> " + str(data['nodeTo']))
         causalGraph.remove_edge_from_graph(data['nodeFrom'], data['nodeTo'])
+        interface_data = dict()
+        get_graph_information(interface_data)
+        return jsonify(interface_data)
+
+@app.route("/reverseEdge", methods=['POST'])
+def reverse_edge():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print ("reverse edge: " + str(data['nodeFrom']) + " -> " + str(data['nodeTo']))
+        causalGraph.reverse_edge(data['nodeFrom'], data['nodeTo'])
         interface_data = dict()
         get_graph_information(interface_data)
         return jsonify(interface_data)
@@ -134,6 +161,7 @@ def remove_edge_from_dot_src():
 def add_edge_to_causal_graph():
     if request.method == 'POST':
         data = json.loads(request.data)
+        print ("add edge: " + str(data['nodeFrom']) + " -> " + str(data['nodeTo']))
         causalGraph.add_edge(data['nodeFrom'], data['nodeTo'])
         interface_data = dict()
         get_graph_information(interface_data)
@@ -143,6 +171,7 @@ def add_edge_to_causal_graph():
 def remove_nodes_from_causal_graph():
     if request.method == 'POST':
         data = json.loads(request.data)
+        print ("remove node : " + str(data['features']))
         causalGraph.recalculate_causal_graph(data['features'], data['removedEdges'])
         interface_data = dict()
         get_graph_information(interface_data)
@@ -152,6 +181,7 @@ def remove_nodes_from_causal_graph():
 def undo_graph_edit():
     if request.method == 'POST':
         data = json.loads(request.data)
+        print "undo"
         print data
         causalGraph.undo_last_edit(data)
         interface_data = dict()
@@ -176,6 +206,36 @@ def get_graph_information(data_dict):
     data_dict['dotSrc'] = causalGraph.dot_src
     data_dict['graph'] = causalGraph.graph
 
+@app.route("/calculateScoresAndClassify", methods=["POST"])
+def cal_scores_and_classify():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print "Markov Blanket"
+        print data['names']
+        rank_loss = FEATURE_DATA.calculate_rank_loss(data['featureRank'], data['names'])
+        rank_loss_listwise = FEATURE_DATA.calculate_rank_loss_listwise(data['featureRank'], data['names'])
+        FEATURE_DATA.calculate_mutual_information(data['features'], data['names'])#calculate_MI(FEATURE_DATA.features, feature_indexes, FEATURE_DATA.target)
+
+        classifier.classify(data['names'])
+
+        interface_data = dict()
+        interface_data['accuracy'] = classifier.accuracy
+        interface_data['accuracyTrain'] = classifier.accuracy_train
+        interface_data['precision'] = classifier.precision
+        interface_data['recall'] = classifier.recall
+        interface_data['confusionMatrix'] = classifier.cm.tolist()
+        interface_data['confusionMatrixNormalized'] = classifier.cm_normalized.tolist()
+        interface_data['rocCurve'] = classifier.rocCurve
+        interface_data['auc'] = classifier.auc
+
+        interface_data['MI'] = FEATURE_DATA.MI
+        interface_data['rankLoss'] = rank_loss
+        print ("accuracy: " + str(classifier.accuracy))
+        print ("accuracyTrain: " + str(classifier.accuracy_train))
+        print ("MI: " + str(FEATURE_DATA.MI))
+        print ("rankLoss: " + str(rank_loss))
+        return jsonify(interface_data)
+
 @app.route("/calculateScores", methods=["POST"])
 def send_new_calculated_MI():
     if request.method == 'POST':
@@ -184,6 +244,7 @@ def send_new_calculated_MI():
         rank_loss_listwise = FEATURE_DATA.calculate_rank_loss_listwise(data['featureRank'], data['names'])
         FEATURE_DATA.calculate_mutual_information(data['features'], data['names'])#calculate_MI(FEATURE_DATA.features, feature_indexes, FEATURE_DATA.target)
         interface_data = dict()
+        print data["names"]
         interface_data['MI'] = FEATURE_DATA.MI
         interface_data['rankLoss'] = rank_loss
         return jsonify(interface_data)
@@ -195,10 +256,16 @@ def classify():
         classifier.classify(features['features'])
         data = dict()
         data['accuracy'] = classifier.accuracy
+        data['accuracyTrain'] = classifier.accuracy_train
         data['precision'] = classifier.precision
         data['recall'] = classifier.recall
         data['confusionMatrix'] = classifier.cm.tolist()
         data['confusionMatrixNormalized'] = classifier.cm_normalized.tolist()
+        data['rocCurve'] = classifier.rocCurve
+        data['auc'] = classifier.auc
+        print ("features: " + str(features['features']))
+        print ("accuracy: " + str(classifier.accuracy))
+        print ("accuracyTrain: " + str(classifier.accuracy_train))
     return jsonify(data)
 
 @app.route("/removeSelected", methods=['POST'])
