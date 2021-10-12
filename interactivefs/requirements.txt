@@ -109,7 +109,7 @@ numpy==1.11.1
 numpydoc==0.7.0
 odo==0.5.1
 olefile==0.44
-opencv-python==3.1.0.0
+opencv-python==4.2.0.32
 openpyxl==2.4.8
 ordereddict==1.1
 packaging==16.8
